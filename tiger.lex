@@ -9,13 +9,14 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
 
 
 %%
+%s COMMENT STRING;
 %%
-<INITIAL>"\n"	      => (lineNum := !lineNum + 1;
+<INITIAL>"\n"       => (lineNum := !lineNum + 1;
                         linePos : = yypos :: !linePos;
                         continue());
 
 <INITIAL>"type"     => (Tokens.TYPE(yypos, yypos + 4));
-<INITIAL>"var" 	    => (Tokens.VAR(yypos, yypos + 3));
+<INITIAL>"var"      => (Tokens.VAR(yypos, yypos + 3));
 <INITIAL>"function" => (Tokens.FUNCTION(yypos, yypos + 8));
 <INITIAL>"break"    => (Tokens.BREAK(yypos, yypos + 5));
 <INITIAL>"of"       => (Tokens.OF(yypos, yypos + 2));
@@ -54,7 +55,24 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
 <INITIAL>"("        => (Tokens.LPAREN(yypos, yypos + 1));
 <INITIAL>";"        => (Tokens.SEMICOLON(yypos, yypos + 1));
 <INITIAL>":"        => (Tokens.COLON(yypos, yypos + 1));
-<INITIAL>","	      => (Tokens.COMMA(yypos, yypos + 1));
+<INITIAL>","       => (Tokens.COMMA(yypos, yypos + 1));
 
-<INITIAL>           => (ErrorMsg.error yypos ("illegal character " ^ yytext);
+<INITIAL>[a-z]([a-z] | [0-9] | [A-Z] | "_")*
+                    => (Tokens.ID(yytext, yypos, yypos + size yytext));
+<INITIAL>[0-9]+     => (Tokens.INT(Int.fromString yytext,
+                                   yypos, yypos + size yytext));
+
+<INITIAL>"/*"       => (YYBEGIN COMMENT; continue(););
+<INITIAL>"\""       => (YYBEGIN STRING; continue(););
+
+<COMMENT>"*/"       => (YYBEGIN INITIAL; continue(););
+<COMMENT>.          => (continue(););
+
+<STRING>[a-z]|[A-Z]|[0-9]|"\""
+                    => (Tokens.STRING(yytext, yypos, yypos + size yytext););
+<STRING>"\""        => (YYBEGIN INITIAL; continue(););
+<STRING>.           => (ErrorMsg.error yypos ("illegal character " ^ yytext);
+                        continue());
+
+<INITIAL>.          => (ErrorMsg.error yypos ("illegal character " ^ yytext);
                         continue());
