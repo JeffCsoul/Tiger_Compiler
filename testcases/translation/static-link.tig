@@ -1,0 +1,8 @@
+let 
+   function foo() = 
+      let function bar() = bar()
+          function foobar () = bar()
+      in ()
+      end
+in foo()
+end

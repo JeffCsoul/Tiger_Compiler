@@ -1,0 +1,23 @@
+/*checking for multi-level comments
+/* 2nd
+/* 3rd
+/* 4th
+/* 5th
+*/5th
+*/4th
+*/3rd
+*/2nd
+*/
+
+let
+        var a:= 0
+in
+        for i:=0 to 100 do (a:=a+1;
+                print ("see how you handle this \1234");
+                print ("i dont think this is legal"");
+                print ("is this legal \y ");
+                print ("i am trying to write a multi line string..
+                                I forgot some thing"))
+end
+
+

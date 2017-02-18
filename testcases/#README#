@@ -1,0 +1,13 @@
+CSci 5161 --- Test cases for the Tiger compiler
+
+There are a few different kinds of tests that are useful depending on
+which phase of compiler writing you are currently at. In the
+beginning, during syntactic (lexer and parser) and semantic analysis
+(type checking, escape calculation etc) the syntax-and-sem-analysis
+tests are probably most useful; use the one example in comments to
+check the treatment of comments during lexical analysis. Later, when
+generating intermediate code, the test cases in translation may be
+relevant. Eventually, when testing the MIPS code that is generated,
+the tests in full-compiler-tests that actually contain meaningful
+programs that should produce recognizable results would be useful.
+

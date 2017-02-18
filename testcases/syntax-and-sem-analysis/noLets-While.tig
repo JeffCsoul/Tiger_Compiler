@@ -1,0 +1,5 @@
+
+/* correct while */
+while 10 > 5 do (1+2;())
+
+

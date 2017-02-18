@@ -1,0 +1,23 @@
+/* Testcases for testing string literals.  */
+let
+  function print_something(c:int) =
+  (
+    if(c = 0) then
+        (print ("This is a simple print with \t \"ZERO\" \n"))
+    else if (c = 1) then
+        (print ("ASCII characters specified using the \\ddd format: \n");
+        print ("\126\126\126\126\126\126\126\126\126\126 \n");
+        print ("\123\123\123\123\123\123\123\123\123 \n"))
+    else if (c = 2) then
+        (print ("This is for skipping sequence of characters.\
+                 \ I want to continue to next line. We should \
+                 \ skip all things between the two \\'s  \
+                                        \\n"))
+    else
+        (print ("We are done - some control characters \
+                  \ \^G\^C\^H\^C\^G\^G\^G\^G\^A\^H \n")))
+in
+        print_something(3)
+end
+
+

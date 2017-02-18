@@ -1,0 +1,28 @@
+/* arr1 is valid since expression 0 is int = myint */
+let
+type myint = int
+type  arrtype = array of myint
+
+var arr1:arrtype := arrtype [10] of 0
+var arr2:arrtype := arrtype [5] of 6
+var i := 2
+
+function printint(i: int) =
+  let function f(i:int) = if i>0 
+	     then (f(i/10); print(chr(i-i/10*10+ord("0"))))
+   in if i<0 then (print("-"); f(-i))
+      else if i>0 then f(i)
+      else print("0")
+  end
+
+in
+  arr1[3] := 5; arr1[6] := 7;
+  arr1; 
+  printint(arr1[5]); print("\n");
+  printint(arr1[0]); print("\n");
+  printint(arr1[9]); print("\n");
+  printint(arr2[4]); print("\n");
+  printint(arr1[i+1]); print("\n");
+  printint(arr1[arr2[3]]); print("\n");
+  printint(arr1[i-8]); print("\n")
+end

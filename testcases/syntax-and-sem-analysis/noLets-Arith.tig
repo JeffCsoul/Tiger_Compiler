@@ -1,0 +1,5 @@
+
+/* simple arithmetic expression */
+for i:=0 to ((100|1)&0) do (1+2-(3*4)/5;())
+
+

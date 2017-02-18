@@ -1,0 +1,6 @@
+let
+	type a = int
+	var b:a := 4
+in
+	0
+end

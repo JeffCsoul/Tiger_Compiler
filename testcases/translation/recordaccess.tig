@@ -1,0 +1,12 @@
+/* define valid recursive types */
+let
+/* define a list */
+type intlist = {hd: int, tl: intlist} 
+
+var lis:intlist := nil
+ 
+in 
+   if (lis.tl <> nil)
+   then lis.tl.hd
+   else lis.hd
+end

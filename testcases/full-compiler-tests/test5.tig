@@ -1,0 +1,44 @@
+/* define valid recursive types */
+let
+/* define a list */
+type intlist = {hd: int, tl: intlist} 
+
+function printint(i: int) =
+  let function f(i:int) = if i>0 
+	     then (f(i/10); print(chr(i-i/10*10+ord("0"))))
+   in if i<0 then (print("-"); f(-i))
+      else if i>0 then f(i)
+      else print("0")
+  end
+
+function printlist(il: intlist) = 
+  let function printlist_aux(il: intlist) =
+         if (il = nil) then print("]\n")
+         else (print(", "); printint(il.hd); printlist_aux(il.tl))
+  in if (il = nil) then print ("[]\n")
+     else (print("["); printint(il.hd); printlist_aux(il.tl))
+  end
+
+function append(il1:intlist, il2:intlist):intlist =
+    if (il1 = nil) then il2
+    else let var newl:intlist := intlist {hd = il1.hd, 
+                                          tl = append(il1.tl,il2)}
+         in newl
+         end
+
+var lis0:intlist := nil
+
+var lis1:intlist := intlist {hd=0, 
+                             tl= intlist {hd = 1, 
+                                          tl = intlist{ hd = 2, tl = nil } }}
+
+var lis2:intlist := intlist {hd=3, 
+                             tl= intlist {hd = 4, 
+                                          tl = intlist{ hd = 5, tl = nil } }}
+
+in
+	printlist(lis0);
+        printlist(lis1); printlist(lis2); 
+        printlist(append(lis1,lis2));
+        printlist(append(lis0,lis2))
+end

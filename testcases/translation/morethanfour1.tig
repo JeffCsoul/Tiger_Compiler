@@ -1,0 +1,4 @@
+let function f(x1:int,x2:int,x3:int,x4:int,x5:int,x6:int):int =
+             x1+x5
+in f(1,2,3,4,5,6)
+end

@@ -1,0 +1,29 @@
+let
+	var v1 := 1
+	var v2 := 2
+	var v3 := 3
+
+	function find1(curval : int):int = 
+	(
+	let 
+                var v1 := 4
+		var v5 := 5
+		function find2(c1 :int, c2 : int, c3 : int):int = 
+		(
+		  let
+		    var v6 := 6
+                    var v7 := 7
+		    var v8 := 8
+		  in
+			v8 := v8 + c1 + c2 + c3;
+			v1 + v2 + v3 + v5 + v6 * v7 + v8
+		  end
+		)
+	in
+		find2(v1,curval,v5) + v1 + v2 * curval
+	end
+	)
+in
+        find1(v2) + v3
+end
+

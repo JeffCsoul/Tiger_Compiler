@@ -1,0 +1,21 @@
+
+let
+    var rate := 2
+
+    function getCost(total:int):int =
+	(
+	let
+		var newrate := 10
+		function getExtra() = 
+		(
+		  if(total > 100) then rate:= 5 else rate := rate
+		)
+	in
+	  getExtra();newrate*total*rate
+	end
+	)
+
+in
+	getCost(250) + 20
+end
+

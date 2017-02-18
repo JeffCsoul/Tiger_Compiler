@@ -1,0 +1,16 @@
+let
+  type intarr=array of int
+  var y:=4
+  var x:=3
+  function foo(n: int) =
+    for i := 1 to 10 do
+      let function bb(z:int):int = if z then (n;y) else i
+          var y:=3
+          var a:=intarr [10] of 0
+      in
+        if (n = 0) then y:=bb(n)
+        else a[i]:=i+x
+      end
+in
+  foo(10)
+end
