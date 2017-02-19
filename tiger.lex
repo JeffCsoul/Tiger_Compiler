@@ -63,7 +63,7 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
 <INITIAL>";"        => (Tokens.SEMICOLON(yypos, yypos + 1));
 <INITIAL>":"        => (Tokens.COLON(yypos, yypos + 1));
 <INITIAL>","        => (Tokens.COMMA(yypos, yypos + 1));
-<INITIAL>[a-z|A-Z]([a-z]|[0-9]|[A-Z]|"_")*
+<INITIAL>[a-zA-Z]([a-z0-9A-Z]|"_")*
                     => (Tokens.ID(yytext, yypos, yypos + size yytext));
 <INITIAL>[0-9]+     => (let val SOME tempint = Int.fromString(yytext)
                         in
