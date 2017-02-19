@@ -61,7 +61,6 @@ backslash=["\\n"|"\\t"|"\\^"[\000-\031]|"\\\""|"\\\\"|{formats}|{decdigits}];
 <INITIAL>";"        => (Tokens.SEMICOLON(yypos, yypos + 1));
 <INITIAL>":"        => (Tokens.COLON(yypos, yypos + 1));
 <INITIAL>","        => (Tokens.COMMA(yypos, yypos + 1));
-
 <INITIAL>[a-zA-Z]([a-z] | [0-9] | [A-Z] | "_")*
                     => (Tokens.ID(yytext, yypos, yypos + size yytext));
 <INITIAL>[0-9]+     => (let val SOME tempint = Int.fromString(yytext)
@@ -69,7 +68,6 @@ backslash=["\\n"|"\\t"|"\\^"[\000-\031]|"\\\""|"\\\\"|{formats}|{decdigits}];
                         Tokens.INT(tempint,
                                    yypos, yypos + size yytext)
                         end);
-
 <INITIAL>"/*"       => (YYBEGIN COMMENT;
                         nested_comment := 1;
                         continue());
@@ -85,6 +83,9 @@ backslash=["\\n"|"\\t"|"\\^"[\000-\031]|"\\\""|"\\\\"|{formats}|{decdigits}];
                         else ();
                         continue());
 <COMMENT>.          => (continue());
+<COMMENT>"\n"       => (lineNum := !lineNum + 1;
+                        linePos := yypos :: !linePos;
+                        continue());
 
 <STRING>[" " | "!" | [\035-\091] | [\093-\126] | {backslash}]*
                     => (Tokens.STRING(yytext, yypos, yypos + size yytext));
@@ -93,6 +94,9 @@ backslash=["\\n"|"\\t"|"\\^"[\000-\031]|"\\\""|"\\\\"|{formats}|{decdigits}];
 <STRING>[" " | "!" | [\035-\091] | [\093-\126] | {backslash}]*"\\"
                     => (Tokens.STRING("", yypos, yypos + size yytext));
 <STRING>"\""        => (YYBEGIN INITIAL; continue());
+<STRING>[.|\n]      => (Tokens.STRING("", yypos, yypos + size yytext);
+                        YYBEGIN INITIAL;
+                        continue());
 
 <INITIAL>.          => (ErrorMsg.error yypos ("illegal character " ^ yytext);
                         continue());
