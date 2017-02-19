@@ -14,9 +14,6 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
 
 %%
 %s COMMENT STRING SLASH SLASH_M;
-formats=([\\].*[\\]);
-backslash=(\\(n|t|\^[@-_]|"\""|\\|[0-9][0-9][0-9]));
-stdchar=([ !#-\[\]-~]|{backslash});
 %%
 <INITIAL>"\n"       => (lineNum := !lineNum + 1;
                         linePos := yypos :: !linePos;
