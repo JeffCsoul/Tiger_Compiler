@@ -934,7 +934,7 @@ let fun continue() = lex() in
                              YYBEGIN STRING);
                         continue())
 | 197 => (YYBEGIN INITIAL;
-                        ErrorMsg.error yypos("illegal escape with \\");
+                        ErrorMsg.error yypos("illegal escape");
                         Tokens.STRING("", !left_tag, yypos + 1))
 | 199 => let val yytext=yymktext() in buff_string := !buff_string ^ yytext;
                         continue() end
