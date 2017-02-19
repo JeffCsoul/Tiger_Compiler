@@ -3,6 +3,7 @@ type lexresult      = Tokens.token
 
 val lineNum         = ErrorMsg.lineNum
 val linePos         = ErrorMsg.linePos
+val nested_comment  = ref 0
 fun err(p1,p2)      = ErrorMsg.error p1
 
 fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
@@ -10,10 +11,14 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
 
 %%
 %s COMMENT STRING;
+decdigits=["\\"[0-9][0-9][0-9]];
+formats=["\\"].*["\\"];
+backslash=["\\n"|"\\t"|"\\^"[\000-\031]|"\\\""|"\\\\"|{formats}|{decdigits}];
 %%
 <INITIAL>"\n"       => (lineNum := !lineNum + 1;
-                        linePos : = yypos :: !linePos;
+                        linePos := yypos :: !linePos;
                         continue());
+<INITIAL>" "        => (continue());
 
 <INITIAL>"type"     => (Tokens.TYPE(yypos, yypos + 4));
 <INITIAL>"var"      => (Tokens.VAR(yypos, yypos + 3));
@@ -55,24 +60,39 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
 <INITIAL>"("        => (Tokens.LPAREN(yypos, yypos + 1));
 <INITIAL>";"        => (Tokens.SEMICOLON(yypos, yypos + 1));
 <INITIAL>":"        => (Tokens.COLON(yypos, yypos + 1));
-<INITIAL>","       => (Tokens.COMMA(yypos, yypos + 1));
+<INITIAL>","        => (Tokens.COMMA(yypos, yypos + 1));
 
-<INITIAL>[a-z]([a-z] | [0-9] | [A-Z] | "_")*
+<INITIAL>[a-zA-Z]([a-z] | [0-9] | [A-Z] | "_")*
                     => (Tokens.ID(yytext, yypos, yypos + size yytext));
-<INITIAL>[0-9]+     => (Tokens.INT(Int.fromString yytext,
-                                   yypos, yypos + size yytext));
+<INITIAL>[0-9]+     => (let val SOME tempint = Int.fromString(yytext)
+                        in
+                        Tokens.INT(tempint,
+                                   yypos, yypos + size yytext)
+                        end);
 
-<INITIAL>"/*"       => (YYBEGIN COMMENT; continue(););
-<INITIAL>"\""       => (YYBEGIN STRING; continue(););
-
-<COMMENT>"*/"       => (YYBEGIN INITIAL; continue(););
-<COMMENT>.          => (continue(););
-
-<STRING>[a-z]|[A-Z]|[0-9]|"\""
-                    => (Tokens.STRING(yytext, yypos, yypos + size yytext););
-<STRING>"\""        => (YYBEGIN INITIAL; continue(););
-<STRING>.           => (ErrorMsg.error yypos ("illegal character " ^ yytext);
+<INITIAL>"/*"       => (YYBEGIN COMMENT;
+                        nested_comment := 1;
                         continue());
+<INITIAL>"\""       => (YYBEGIN STRING; continue());
+
+<COMMENT>"/*"       => (nested_comment := !nested_comment + 1;
+                        continue());
+<COMMENT>"*/"       => (nested_comment := !nested_comment - 1;
+                        if (!nested_comment = 0) then
+                            YYBEGIN INITIAL
+                        else if (!nested_comment < 0) then
+                            ErrorMsg.error yypos ("illegal comments")
+                        else ();
+                        continue());
+<COMMENT>.          => (continue());
+
+<STRING>[" " | "!" | [\035-\091] | [\093-\126] | {backslash}]*
+                    => (Tokens.STRING(yytext, yypos, yypos + size yytext));
+<STRING>[" " | "!" | [\035-\091] | [\093-\126] | {backslash}]*"\n"
+                    => (Tokens.STRING("", yypos, yypos + size yytext));
+<STRING>[" " | "!" | [\035-\091] | [\093-\126] | {backslash}]*"\\"
+                    => (Tokens.STRING("", yypos, yypos + size yytext));
+<STRING>"\""        => (YYBEGIN INITIAL; continue());
 
 <INITIAL>.          => (ErrorMsg.error yypos ("illegal character " ^ yytext);
                         continue());
