@@ -10,6 +10,7 @@ val linePos         = ErrorMsg.linePos
 val nested_comment  = ref 0
 val buff_string     = ref ""
 val left_tag        = ref 0
+val format_flag     = ref false
 fun err(p1,p2)      = ErrorMsg.error p1
 
 fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
@@ -70,26 +71,26 @@ val s = [
 \\105"
 ),
  (7, 
-"\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\111\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\110\000\
-\\000\000\000\000\109\000\000\000\000\000\000\000\000\000\000\000\
-\\000"
+"\109\109\109\109\109\109\109\109\109\109\119\109\109\109\109\109\
+\\109\109\109\109\109\109\109\109\109\109\109\109\109\109\109\109\
+\\109\109\118\109\109\109\109\109\109\109\109\109\109\109\109\109\
+\\115\115\115\115\115\115\115\115\115\115\109\109\109\109\109\109\
+\\109\109\109\109\109\109\109\109\109\109\109\109\109\109\109\109\
+\\109\109\109\109\109\109\109\109\109\109\109\109\114\109\112\109\
+\\109\109\109\109\109\109\109\109\109\109\109\109\109\109\111\109\
+\\109\109\109\109\110\109\109\109\109\109\109\109\109\109\109\109\
+\\109"
 ),
- (8, 
-"\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\111\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
-\\112\112\112\112\112\112\112\112\112\112\112\112\112\112\112\112\
-\\112\112\112\112\112\112\112\112\112\112\112\112\112\112\112\112\
-\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\110\000\
-\\000\000\000\000\109\000\000\000\000\000\000\000\000\000\000\000\
-\\000"
+ (9, 
+"\120\120\120\120\120\120\120\120\120\121\124\120\120\120\120\120\
+\\120\120\120\120\120\120\120\120\120\120\120\120\120\120\120\120\
+\\121\120\123\120\120\120\120\120\120\120\120\120\120\120\120\120\
+\\120\120\120\120\120\120\120\120\120\120\120\120\120\120\120\120\
+\\120\120\120\120\120\120\120\120\120\120\120\120\120\120\120\120\
+\\120\120\120\120\120\120\120\120\120\120\120\120\122\120\120\120\
+\\120\120\120\120\120\120\121\120\120\120\120\120\120\120\120\120\
+\\120\120\120\120\120\120\120\120\120\120\120\120\120\120\120\120\
+\\120"
 ),
  (13, 
 "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
@@ -597,6 +598,39 @@ val s = [
 \\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
 \\000"
 ),
+ (112, 
+"\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\113\113\113\113\113\113\113\113\113\113\113\113\113\113\113\113\
+\\113\113\113\113\113\113\113\113\113\113\113\113\113\113\113\113\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000"
+),
+ (115, 
+"\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\116\116\116\116\116\116\116\116\116\116\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000"
+),
+ (116, 
+"\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\117\117\117\117\117\117\117\117\117\117\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\
+\\000"
+),
 (0, "")]
 fun f x = x 
 val s = map f (rev (tl (rev s))) 
@@ -613,24 +647,24 @@ in Vector.fromList(map g
 {fin = [], trans = 5},
 {fin = [], trans = 5},
 {fin = [], trans = 7},
-{fin = [], trans = 8},
-{fin = [], trans = 0},
-{fin = [], trans = 0},
-{fin = [(N 174)], trans = 0},
-{fin = [(N 116),(N 174)], trans = 0},
-{fin = [(N 87),(N 138),(N 174)], trans = 13},
+{fin = [], trans = 7},
+{fin = [], trans = 9},
+{fin = [], trans = 9},
+{fin = [(N 197)], trans = 0},
+{fin = [(N 116),(N 197)], trans = 0},
+{fin = [(N 87),(N 138),(N 197)], trans = 13},
 {fin = [(N 138)], trans = 13},
-{fin = [(N 118),(N 174)], trans = 0},
-{fin = [(N 138),(N 174)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 17},
+{fin = [(N 118),(N 197)], trans = 0},
+{fin = [(N 138),(N 197)], trans = 13},
+{fin = [(N 138),(N 197)], trans = 17},
 {fin = [(N 138)], trans = 18},
 {fin = [(N 138)], trans = 19},
 {fin = [(N 138)], trans = 20},
 {fin = [(N 63),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 22},
+{fin = [(N 138),(N 197)], trans = 22},
 {fin = [(N 138)], trans = 23},
 {fin = [(N 14),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 25},
+{fin = [(N 138),(N 197)], trans = 25},
 {fin = [(N 138)], trans = 26},
 {fin = [(N 138)], trans = 27},
 {fin = [(N 10),(N 138)], trans = 13},
@@ -638,18 +672,18 @@ in Vector.fromList(map g
 {fin = [(N 138)], trans = 30},
 {fin = [(N 138)], trans = 31},
 {fin = [(N 73),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 33},
+{fin = [(N 138),(N 197)], trans = 33},
 {fin = [(N 32),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 35},
+{fin = [(N 138),(N 197)], trans = 35},
 {fin = [(N 138)], trans = 36},
 {fin = [(N 43),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 38},
+{fin = [(N 138),(N 197)], trans = 38},
 {fin = [(N 138)], trans = 39},
 {fin = [(N 47),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 41},
+{fin = [(N 138),(N 197)], trans = 41},
 {fin = [(N 39),(N 138)], trans = 13},
 {fin = [(N 76),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 44},
+{fin = [(N 138),(N 197)], trans = 44},
 {fin = [(N 138)], trans = 45},
 {fin = [(N 138)], trans = 46},
 {fin = [(N 138)], trans = 47},
@@ -659,51 +693,51 @@ in Vector.fromList(map g
 {fin = [(N 23),(N 138)], trans = 13},
 {fin = [(N 138)], trans = 52},
 {fin = [(N 57),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 54},
+{fin = [(N 138),(N 197)], trans = 54},
 {fin = [(N 138)], trans = 55},
 {fin = [(N 36),(N 138)], trans = 13},
 {fin = [(N 138)], trans = 57},
 {fin = [(N 138)], trans = 58},
 {fin = [(N 68),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 60},
+{fin = [(N 138),(N 197)], trans = 60},
 {fin = [(N 50),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 62},
+{fin = [(N 138),(N 197)], trans = 62},
 {fin = [(N 138)], trans = 63},
 {fin = [(N 138)], trans = 64},
 {fin = [(N 138)], trans = 65},
 {fin = [(N 29),(N 138)], trans = 13},
-{fin = [(N 138),(N 174)], trans = 67},
+{fin = [(N 138),(N 197)], trans = 67},
 {fin = [(N 138)], trans = 68},
 {fin = [(N 138)], trans = 69},
 {fin = [(N 138)], trans = 70},
 {fin = [(N 82),(N 138)], trans = 13},
-{fin = [(N 120),(N 174)], trans = 0},
-{fin = [(N 122),(N 174)], trans = 0},
-{fin = [(N 94),(N 174)], trans = 74},
+{fin = [(N 120),(N 197)], trans = 0},
+{fin = [(N 122),(N 197)], trans = 0},
+{fin = [(N 94),(N 197)], trans = 74},
 {fin = [(N 92)], trans = 0},
-{fin = [(N 104),(N 174)], trans = 0},
-{fin = [(N 99),(N 174)], trans = 77},
+{fin = [(N 104),(N 197)], trans = 0},
+{fin = [(N 99),(N 197)], trans = 77},
 {fin = [(N 102)], trans = 0},
 {fin = [(N 97)], trans = 0},
-{fin = [(N 128),(N 174)], trans = 0},
-{fin = [(N 130),(N 174)], trans = 81},
+{fin = [(N 128),(N 197)], trans = 0},
+{fin = [(N 130),(N 197)], trans = 81},
 {fin = [(N 85)], trans = 0},
-{fin = [(N 141),(N 174)], trans = 83},
+{fin = [(N 141),(N 197)], trans = 83},
 {fin = [(N 141)], trans = 83},
-{fin = [(N 106),(N 174)], trans = 85},
+{fin = [(N 106),(N 197)], trans = 85},
 {fin = [(N 144)], trans = 0},
-{fin = [(N 114),(N 174)], trans = 0},
-{fin = [(N 110),(N 174)], trans = 0},
-{fin = [(N 132),(N 174)], trans = 0},
-{fin = [(N 112),(N 174)], trans = 0},
-{fin = [(N 108),(N 174)], trans = 0},
-{fin = [(N 124),(N 174)], trans = 0},
-{fin = [(N 126),(N 174)], trans = 0},
-{fin = [(N 89),(N 174)], trans = 0},
-{fin = [(N 146),(N 174)], trans = 0},
-{fin = [(N 3),(N 174)], trans = 0},
+{fin = [(N 114),(N 197)], trans = 0},
+{fin = [(N 110),(N 197)], trans = 0},
+{fin = [(N 132),(N 197)], trans = 0},
+{fin = [(N 112),(N 197)], trans = 0},
+{fin = [(N 108),(N 197)], trans = 0},
+{fin = [(N 124),(N 197)], trans = 0},
+{fin = [(N 126),(N 197)], trans = 0},
+{fin = [(N 89),(N 197)], trans = 0},
+{fin = [(N 146),(N 197)], trans = 0},
+{fin = [(N 3),(N 197)], trans = 0},
 {fin = [(N 1)], trans = 0},
-{fin = [(N 5),(N 174)], trans = 0},
+{fin = [(N 5),(N 197)], trans = 0},
 {fin = [(N 154)], trans = 0},
 {fin = [(N 154)], trans = 100},
 {fin = [(N 149)], trans = 0},
@@ -714,10 +748,22 @@ in Vector.fromList(map g
 {fin = [(N 162),(N 164)], trans = 0},
 {fin = [(N 158),(N 164)], trans = 0},
 {fin = [(N 160)], trans = 0},
-{fin = [(N 168)], trans = 0},
-{fin = [(N 166)], trans = 0},
-{fin = [(N 172)], trans = 0},
-{fin = [(N 170)], trans = 0}])
+{fin = [(N 181)], trans = 0},
+{fin = [(N 168),(N 181)], trans = 0},
+{fin = [(N 166),(N 181)], trans = 0},
+{fin = [(N 181)], trans = 112},
+{fin = [(N 171)], trans = 0},
+{fin = [(N 179),(N 181)], trans = 0},
+{fin = [(N 181)], trans = 115},
+{fin = [], trans = 116},
+{fin = [(N 175)], trans = 0},
+{fin = [(N 177),(N 181)], trans = 0},
+{fin = [(N 183)], trans = 0},
+{fin = [(N 195)], trans = 0},
+{fin = [(N 189),(N 195)], trans = 0},
+{fin = [(N 191),(N 195)], trans = 0},
+{fin = [(N 193),(N 195)], trans = 0},
+{fin = [(N 185)], trans = 0}])
 end
 structure StartStates =
 	struct
@@ -727,9 +773,9 @@ structure StartStates =
 
 val COMMENT = STARTSTATE 3;
 val INITIAL = STARTSTATE 1;
+val SLASH = STARTSTATE 7;
+val SLASH_M = STARTSTATE 9;
 val STRING = STARTSTATE 5;
-val STRING_SLASH = STARTSTATE 7;
-val STRING_SLASH_F = STARTSTATE 9;
 
 end
 type result = UserDeclarations.lexresult
@@ -787,8 +833,8 @@ let fun continue() = lex() in
 | 14 => (Tokens.VAR(yypos, yypos + 3))
 | 141 => let val yytext=yymktext() in let val SOME tempint = Int.fromString(yytext)
                         in
-                        Tokens.INT(tempint,
-                                   yypos, yypos + size yytext)
+                          Tokens.INT(tempint,
+                                     yypos, yypos + size yytext)
                         end end
 | 144 => (YYBEGIN COMMENT;
                         nested_comment := 1;
@@ -796,6 +842,7 @@ let fun continue() = lex() in
 | 146 => (YYBEGIN STRING;
                         buff_string := "";
                         left_tag := yypos;
+                        format_flag := true;
                         continue())
 | 149 => (nested_comment := !nested_comment + 1;
                         continue())
@@ -811,14 +858,18 @@ let fun continue() = lex() in
                         linePos := yypos :: !linePos;
                         continue())
 | 158 => (YYBEGIN INITIAL;
-                        Tokens.STRING(!buff_string, !left_tag, yypos + 1))
+                        if (!format_flag)
+                          then
+                            Tokens.STRING(!buff_string, !left_tag, yypos + 1)
+                          else
+                            (ErrorMsg.error yypos ("illegal string");
+                             Tokens.STRING("", !left_tag, yypos + 1)))
 | 160 => (YYBEGIN INITIAL;
-                        Tokens.STRING("", !left_tag, yypos + 1);
                         ErrorMsg.error yypos ("illegal string with \\n");
                         lineNum := !lineNum + 1;
                         linePos := yypos :: !linePos;
-                        continue())
-| 162 => (YYBEGIN STRING_SLASH;
+                        Tokens.STRING("", !left_tag, yypos + 1))
+| 162 => (YYBEGIN SLASH;
                         continue())
 | 164 => let val yytext=yymktext() in buff_string := !buff_string ^ yytext;
                         continue() end
@@ -828,14 +879,56 @@ let fun continue() = lex() in
 | 168 => (YYBEGIN STRING;
                         buff_string := !buff_string ^ "\t";
                         continue())
-| 170 => let val yytext=yymktext() in YYBEGIN STRING;
+| 171 => let val yytext=yymktext() in YYBEGIN STRING;
                         buff_string := !buff_string ^
                           String.str(chr(ord(String.sub(yytext, 1)) - 64));
                         continue() end
-| 172 => (YYBEGIN STRING;
+| 175 => let val yytext=yymktext() in YYBEGIN STRING;
+                        let val SOME tempnum = Int.fromString(yytext)
+                        in
+                          if tempnum > 255
+                            then ErrorMsg.error yypos ("illegal escape \\" ^
+                                                       yytext)
+                            else buff_string := !buff_string ^
+                                                String.str(chr(tempnum))
+                        end;
+                        continue() end
+| 177 => (YYBEGIN STRING;
                         buff_string := !buff_string ^ "\"";
                         continue())
-| 174 => let val yytext=yymktext() in ErrorMsg.error yypos ("illegal character " ^ yytext);
+| 179 => (YYBEGIN STRING;
+                        buff_string := !buff_string ^ "\\";
+                        continue())
+| 181 => let val yytext=yymktext() in YYBEGIN SLASH_M;
+                        buff_string := !buff_string ^ yytext;
+                        format_flag := false;
+                        continue() end
+| 183 => (YYBEGIN SLASH_M;
+                        buff_string := !buff_string ^ "\n";
+                        format_flag := true;
+                        lineNum := !lineNum + 1;
+                        linePos := yypos :: !linePos;
+                        continue())
+| 185 => (buff_string := !buff_string ^ "\n";
+                        format_flag := true;
+                        lineNum := !lineNum + 1;
+                        linePos := yypos :: !linePos;
+                        continue())
+| 189 => let val yytext=yymktext() in buff_string := !buff_string ^ yytext;
+                        format_flag := true;
+                        continue() end
+| 191 => (if !format_flag
+                          then YYBEGIN STRING
+                          else
+                            (ErrorMsg.error yypos("illegal format \\f___f\\");
+                             YYBEGIN STRING);
+                        continue())
+| 193 => (YYBEGIN INITIAL;
+                        ErrorMsg.error yypos("illegal escape with \\");
+                        Tokens.STRING("", !left_tag, yypos + 1))
+| 195 => let val yytext=yymktext() in buff_string := !buff_string ^ yytext;
+                        continue() end
+| 197 => let val yytext=yymktext() in ErrorMsg.error yypos ("illegal character " ^ yytext);
                         continue() end
 | 23 => (Tokens.FUNCTION(yypos, yypos + 8))
 | 29 => (Tokens.BREAK(yypos, yypos + 5))
@@ -888,9 +981,11 @@ let fun continue() = lex() in
 		else scan(NewState,NewAcceptingLeaves,l+1,i0)
 	end
 	end
+(*
 	val start= if substring(!yyb,!yybufpos-1,1)="\n"
 then !yybegin+1 else !yybegin
-	in scan(start,nil,!yybufpos,!yybufpos)
+*)
+	in scan(!yybegin (* start *),nil,!yybufpos,!yybufpos)
     end
 end
   in lex

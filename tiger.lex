@@ -6,13 +6,14 @@ val linePos         = ErrorMsg.linePos
 val nested_comment  = ref 0
 val buff_string     = ref ""
 val left_tag        = ref 0
+val format_flag     = ref false
 fun err(p1,p2)      = ErrorMsg.error p1
 
 fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
 
 
 %%
-%s COMMENT STRING STRING_SLASH STRING_SLASH_F;
+%s COMMENT STRING SLASH SLASH_M;
 formats=([\\].*[\\]);
 backslash=(\\(n|t|\^[@-_]|"\""|\\|[0-9][0-9][0-9]));
 stdchar=([ !#-\[\]-~]|{backslash});
@@ -68,8 +69,8 @@ stdchar=([ !#-\[\]-~]|{backslash});
                     => (Tokens.ID(yytext, yypos, yypos + size yytext));
 <INITIAL>[0-9]+     => (let val SOME tempint = Int.fromString(yytext)
                         in
-                        Tokens.INT(tempint,
-                                   yypos, yypos + size yytext)
+                          Tokens.INT(tempint,
+                                     yypos, yypos + size yytext)
                         end);
 <INITIAL>"/*"       => (YYBEGIN COMMENT;
                         nested_comment := 1;
@@ -77,6 +78,7 @@ stdchar=([ !#-\[\]-~]|{backslash});
 <INITIAL>"\""       => (YYBEGIN STRING;
                         buff_string := "";
                         left_tag := yypos;
+                        format_flag := true;
                         continue());
 
 <COMMENT>"/*"       => (nested_comment := !nested_comment + 1;
@@ -94,32 +96,81 @@ stdchar=([ !#-\[\]-~]|{backslash});
                         continue());
 
 <STRING>"\""        => (YYBEGIN INITIAL;
-                        Tokens.STRING(!buff_string, !left_tag, yypos + 1));
+                        if (!format_flag)
+                          then
+                            Tokens.STRING(!buff_string, !left_tag, yypos + 1)
+                          else
+                            (ErrorMsg.error yypos ("illegal string");
+                             Tokens.STRING("", !left_tag, yypos + 1)));
 <STRING>"\n"        => (YYBEGIN INITIAL;
-                        Tokens.STRING("", !left_tag, yypos + 1);
                         ErrorMsg.error yypos ("illegal string with \\n");
                         lineNum := !lineNum + 1;
                         linePos := yypos :: !linePos;
-                        continue());
-<STRING>"\\"        => (YYBEGIN STRING_SLASH;
+                        Tokens.STRING("", !left_tag, yypos + 1));
+<STRING>"\\"        => (YYBEGIN SLASH;
                         continue());
 <STRING>.           => (buff_string := !buff_string ^ yytext;
                         continue());
 
-<STRING_SLASH>"n"   => (YYBEGIN STRING;
+<SLASH>"n"          => (YYBEGIN STRING;
                         buff_string := !buff_string ^ "\n";
                         continue());
-<STRING_SLASH>"t"   => (YYBEGIN STRING;
+<SLASH>"t"          => (YYBEGIN STRING;
                         buff_string := !buff_string ^ "\t";
                         continue());
-<STRING_SLASH>^[@-_]=> (YYBEGIN STRING;
+<SLASH>"\^"[@-_]       => (YYBEGIN STRING;
                         buff_string := !buff_string ^
                           String.str(chr(ord(String.sub(yytext, 1)) - 64));
                         continue());
-                        
-<STRING_SLASH>"\""  => (YYBEGIN STRING;
+<SLASH>[0-9][0-9][0-9]
+                    => (YYBEGIN STRING;
+                        let val SOME tempnum = Int.fromString(yytext)
+                        in
+                          if tempnum > 255
+                            then ErrorMsg.error yypos ("illegal escape \\" ^
+                                                       yytext)
+                            else buff_string := !buff_string ^
+                                                String.str(chr(tempnum))
+                        end;
+                        continue());
+<SLASH>"\""         => (YYBEGIN STRING;
                         buff_string := !buff_string ^ "\"";
                         continue());
+<SLASH>"\\"         => (YYBEGIN STRING;
+                        buff_string := !buff_string ^ "\\";
+                        continue());
+<SLASH>.            => (YYBEGIN SLASH_M;
+                        buff_string := !buff_string ^ yytext;
+                        format_flag := false;
+                        continue());
+<SLASH>"\n"         => (YYBEGIN SLASH_M;
+                        buff_string := !buff_string ^ "\n";
+                        format_flag := true;
+                        lineNum := !lineNum + 1;
+                        linePos := yypos :: !linePos;
+                        continue());
+
+<SLASH_M>"\n"       => (buff_string := !buff_string ^ "\n";
+                        format_flag := true;
+                        lineNum := !lineNum + 1;
+                        linePos := yypos :: !linePos;
+                        continue());
+<SLASH_M>(" "|"\t"|"\f")
+                    => (buff_string := !buff_string ^ yytext;
+                        format_flag := true;
+                        continue());
+<SLASH_M>"\\"       => (if !format_flag
+                          then YYBEGIN STRING
+                          else
+                            (ErrorMsg.error yypos("illegal format \\f___f\\");
+                             YYBEGIN STRING);
+                        continue());
+<SLASH_M>"\""       => (YYBEGIN INITIAL;
+                        ErrorMsg.error yypos("illegal escape with \\");
+                        Tokens.STRING("", !left_tag, yypos + 1));
+<SLASH_M>.          => (buff_string := !buff_string ^ yytext;
+                        continue());
+
 
 <INITIAL>.          => (ErrorMsg.error yypos ("illegal character " ^ yytext);
                         continue());
