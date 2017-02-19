@@ -1,0 +1,3 @@
+CM.make "../hw2/sources.cm";
+Parse.parseall "files.list";
+

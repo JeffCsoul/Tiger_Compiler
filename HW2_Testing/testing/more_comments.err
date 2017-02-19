@@ -1,0 +1,4 @@
+Parse.parseandprint "/web/classes/Spring-2017/csci5161/resources/hws/testcases/comments/more_comments.tig" "more_comments.tig.out";
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/comments/more_comments.tig:10.1:unterminated comment
+val it = () : unit
+- 

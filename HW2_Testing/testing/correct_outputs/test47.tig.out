@@ -1,0 +1,17 @@
+LET   220
+TYPE   225
+ID(a)     230
+EQ   232
+ID(int)     234
+VAR   239
+ID(b)     243
+ASSIGN   245
+INT(4)   248
+TYPE   251
+ID(a)     256
+EQ   258
+ID(string)     260
+IN   267
+INT(0)   271
+END   273
+EOF   276

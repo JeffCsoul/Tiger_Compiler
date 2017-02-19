@@ -1,0 +1,43 @@
+   (C) Gopalan Nadathur
+
+To run a bunch of tests automatically and to compare them with a standard
+output for hw2, here is what you need to do:
+
+1. Edit the first three lines of the runsml files to indicate the 
+correct directories for the source code, the test cases directory 
+and the current directory. (Typically, you will want to leave the 
+last as is.)
+
+Note that that you MUST NOT use ~ in paths, SML does not understand it
+the way you want it to in this context. You can use .., though.
+
+Note also that the test cases for which we have generated outputs 
+are only those in the syntax-and-sem-analysis directory. Hence, if
+you are wanting to compare your outputs to mine, your test cases
+directory should contain at most these cases. (More information about
+the test cases in the comments directory appears at the end of this
+file.)
+
+2. Make sure you DO NOT have a file named driver.sml.bak in the code
+directory that you want to preserve. If you do, move it somewhere else
+because it will otherwise be clobbered by this testing harness.
+
+3. Run ./runsml. This will run the driver for all files in the testcases 
+directory. The outputs will be compared with the correct results using 
+the unix diff command.
+
+4. If you don't want to run the test for all files, remove the step in 
+runsml which creates a listing of the files in the testing directory in
+file "files.list" and create your own  "files.list" with the names of the
+testcases you need. The diff will show some errors like "only present in 
+correct_results". 
+
+5. The test cases in the comments directory should generate error
+messages in addition to a sequence of tokens. The error messages for
+the two files that my lexer generates are contained in the files
+"comments.err" and "more_comments.err" in this directory. The sequence
+of tokens that my lexer generates are in the files "comments.tig.out" and
+"more_comments.tig.out" respectively. Your tokens may be different for
+these two files---this would depend on what you choose to do to when
+you recover from an error---but my "outputs" should still be helpful,
+I think.

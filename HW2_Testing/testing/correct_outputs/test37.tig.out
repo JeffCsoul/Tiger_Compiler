@@ -1,0 +1,13 @@
+LET   141
+VAR   146
+ID(a)     150
+ASSIGN   152
+INT(0)   155
+VAR   158
+ID(a)     162
+ASSIGN   164
+STRING( )     167
+IN   171
+INT(0)   175
+END   177
+EOF   180

@@ -1,0 +1,7 @@
+Parse.parseandprint "/web/classes/Spring-2017/csci5161/resources/hws/testcases/comments/comments.tig" "comments.out";
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/comments/comments.tig:17.52:string ended with newline:  );
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/comments/comments.tig:18.39:illegal backslash escape:  \y
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/comments/comments.tig:19.24:string ended with newline:  i am trying to write a multi line string..
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/comments/comments.tig:20.52:string ended with newline:  ))
+val it = () : unit
+- 

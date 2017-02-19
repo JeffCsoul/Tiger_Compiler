@@ -1,0 +1,4 @@
+INT(3)   34
+PLUS   36
+STRING(var)     38
+EOF   43

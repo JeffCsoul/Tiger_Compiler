@@ -1,0 +1,11 @@
+LET   29
+VAR   34
+ID(a)     38
+ASSIGN   39
+ID(rectype)     42
+LBRACE   50
+RBRACE   51
+IN   53
+INT(0)   57
+END   59
+EOF   62

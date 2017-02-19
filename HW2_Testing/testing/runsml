@@ -1,0 +1,32 @@
+#!/bin/sh
+CODE_DIR='../hw2'
+TESTCASES_DIR='../testcases/syntax-and-sem-analysis'
+CURR_DIR=`pwd`
+#
+# Cleanup the code directory
+rm -f $CODE_DIR/tiger.lex.sml
+#
+#Update the driver.sml file to have the right directory names
+sed -i "/val dir_inname/c val dir_inname = \"$TESTCASES_DIR/\"" driver.sml
+sed -i "/val dir_outname/c val dir_outname = \"$CURR_DIR/outputs/\"" driver.sml
+#
+# Update the sml_input file to reflext the correct directory for the sml source
+sed -i "/CM.make /c CM.make \"$CODE_DIR/sources.cm\";" sml_input
+#
+# Save original driver.sml and copy the desired one for tests there
+mv $CODE_DIR/driver.sml $CODE_DIR/driver.sml.bak
+cp driver.sml $CODE_DIR/driver.sml
+#
+# Create a list of files to test
+ls $TESTCASES_DIR > files.list
+#
+# Clean up my outputs directory and run my lexer
+rm outputs/*
+sml < sml_input
+# Compare my outputs to the ones provided
+echo "Diffing the directories..."
+diff correct_outputs outputs
+echo "Done."
+#
+# Restore the original driver.sml file
+mv $CODE_DIR/driver.sml.bak $CODE_DIR/driver.sml

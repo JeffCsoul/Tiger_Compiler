@@ -1,0 +1,11 @@
+LET   36
+VAR   42
+ID(d)     46
+ASSIGN   47
+INT(0)   49
+IN   51
+ID(d)     55
+DOT   56
+ID(f)     57
+END   60
+EOF   64

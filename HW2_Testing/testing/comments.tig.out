@@ -1,0 +1,44 @@
+LET   94
+VAR   106
+ID(a)     110
+ASSIGN   111
+INT(0)   114
+IN   116
+FOR   127
+ID(i)     131
+ASSIGN   132
+INT(0)   134
+TO   136
+INT(100)   139
+DO   143
+LPAREN   146
+ID(a)     147
+ASSIGN   148
+ID(a)     150
+PLUS   151
+INT(1)   152
+SEMICOLON   153
+ID(print)     171
+LPAREN   177
+STRING(see how you handle this {4)     178
+RPAREN   209
+SEMICOLON   210
+ID(print)     228
+LPAREN   234
+STRING(i dont think this is legal)     235
+STRING()     263
+ID(print)     283
+LPAREN   289
+STRING(is this legal  )     290
+RPAREN   309
+SEMICOLON   310
+ID(print)     328
+LPAREN   334
+STRING()     335
+ID(I)     411
+ID(forgot)     413
+ID(some)     420
+ID(thing)     425
+STRING()     430
+END   434
+EOF   439
