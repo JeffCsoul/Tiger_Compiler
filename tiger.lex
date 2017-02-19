@@ -173,7 +173,7 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
                              YYBEGIN STRING);
                         continue());
 <SLASH_M>"\""       => (YYBEGIN INITIAL;
-                        ErrorMsg.error yypos("illegal escape with \\");
+                        ErrorMsg.error yypos("illegal escape");
                         Tokens.STRING("", !left_tag, yypos + 1));
 <SLASH_M>.          => (buff_string := !buff_string ^ yytext;
                         continue());
