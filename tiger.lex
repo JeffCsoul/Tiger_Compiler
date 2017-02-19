@@ -7,6 +7,7 @@ val nested_comment  = ref 0
 val buff_string     = ref ""
 val left_tag        = ref 0
 val format_flag     = ref false
+val valid_str       = ref true
 fun err(p1,p2)      = ErrorMsg.error p1
 
 fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
@@ -76,6 +77,7 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
                         buff_string := "";
                         left_tag := yypos;
                         format_flag := true;
+                        valid_str := true;
                         continue());
 
 <COMMENT>"/*"       => (nested_comment := !nested_comment + 1;
@@ -93,7 +95,7 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
                         continue());
 
 <STRING>"\""        => (YYBEGIN INITIAL;
-                        if (!format_flag)
+                        if (!format_flag andalso !valid_str)
                           then
                             Tokens.STRING(!buff_string, !left_tag, yypos + 1)
                           else
@@ -101,6 +103,7 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
                              Tokens.STRING("", !left_tag, yypos + 1)));
 <STRING>"\n"        => (YYBEGIN INITIAL;
                         ErrorMsg.error yypos ("illegal string with \\n");
+                        valid_str := false;
                         lineNum := !lineNum + 1;
                         linePos := yypos :: !linePos;
                         Tokens.STRING("", !left_tag, yypos + 1));
@@ -124,8 +127,10 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
                         let val SOME tempnum = Int.fromString(yytext)
                         in
                           if tempnum > 255
-                            then ErrorMsg.error yypos ("illegal escape \\" ^
-                                                       yytext)
+                            then
+                              (ErrorMsg.error yypos ("illegal escape \\" ^
+                                                      yytext);
+                               valid_str := false)
                             else buff_string := !buff_string ^
                                                 String.str(chr(tempnum))
                         end;
@@ -136,15 +141,20 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
 <SLASH>"\\"         => (YYBEGIN STRING;
                         buff_string := !buff_string ^ "\\";
                         continue());
-<SLASH>.            => (YYBEGIN SLASH_M;
+<SLASH>(" "|"\t"|"\f")
+                    => (YYBEGIN SLASH_M;
                         buff_string := !buff_string ^ yytext;
-                        format_flag := false;
+                        format_flag := true;
                         continue());
 <SLASH>"\n"         => (YYBEGIN SLASH_M;
                         buff_string := !buff_string ^ "\n";
                         format_flag := true;
                         lineNum := !lineNum + 1;
                         linePos := yypos :: !linePos;
+                        continue());
+<SLASH>.            => (YYBEGIN SLASH_M;
+                        buff_string := !buff_string ^ yytext;
+                        format_flag := false;
                         continue());
 
 <SLASH_M>"\n"       => (buff_string := !buff_string ^ "\n";
