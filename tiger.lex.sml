@@ -9,6 +9,7 @@ val lineNum         = ErrorMsg.lineNum
 val linePos         = ErrorMsg.linePos
 val nested_comment  = ref 0
 val buff_string     = ref ""
+val slash_string    = ref ""
 val left_tag        = ref 0
 val format_flag     = ref false
 val valid_str       = ref true
@@ -906,37 +907,41 @@ let fun continue() = lex() in
                         buff_string := !buff_string ^ "\\";
                         continue())
 | 181 => let val yytext=yymktext() in YYBEGIN SLASH_M;
-                        buff_string := !buff_string ^ yytext;
+                        slash_string := yytext;
                         format_flag := true;
                         continue() end
 | 183 => (YYBEGIN SLASH_M;
-                        buff_string := !buff_string ^ "\n";
+                        slash_string := "\n";
                         format_flag := true;
                         lineNum := !lineNum + 1;
                         linePos := yypos :: !linePos;
                         continue())
 | 185 => let val yytext=yymktext() in YYBEGIN SLASH_M;
-                        buff_string := !buff_string ^ yytext;
+                        slash_string := yytext;
                         format_flag := false;
                         continue() end
-| 187 => (buff_string := !buff_string ^ "\n";
+| 187 => (slash_string := !slash_string ^ "\n";
                         format_flag := true;
                         lineNum := !lineNum + 1;
                         linePos := yypos :: !linePos;
                         continue())
-| 191 => let val yytext=yymktext() in buff_string := !buff_string ^ yytext;
+| 191 => let val yytext=yymktext() in slash_string := !slash_string ^ yytext;
                         format_flag := true;
                         continue() end
 | 193 => (if !format_flag
-                          then YYBEGIN STRING
+                          then
+                            (buff_string := !buff_string ^ !slash_string;
+                             YYBEGIN STRING;
+                             continue())
                           else
                             (ErrorMsg.error yypos("illegal format \\f___f\\");
-                             YYBEGIN STRING);
-                        continue())
+                             YYBEGIN INITIAL;
+                             Tokens.STRING(!buff_string, !left_tag, yypos + 1))
+                        )
 | 195 => (YYBEGIN INITIAL;
                         ErrorMsg.error yypos("illegal escape");
-                        Tokens.STRING("", !left_tag, yypos + 1))
-| 197 => let val yytext=yymktext() in buff_string := !buff_string ^ yytext;
+                        Tokens.STRING(!buff_string, !left_tag, yypos + 1))
+| 197 => let val yytext=yymktext() in slash_string := !slash_string ^ yytext;
                         continue() end
 | 199 => let val yytext=yymktext() in ErrorMsg.error yypos ("illegal character " ^ yytext);
                         continue() end

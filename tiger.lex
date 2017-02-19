@@ -5,6 +5,7 @@ val lineNum         = ErrorMsg.lineNum
 val linePos         = ErrorMsg.linePos
 val nested_comment  = ref 0
 val buff_string     = ref ""
+val slash_string    = ref ""
 val left_tag        = ref 0
 val format_flag     = ref false
 val valid_str       = ref true
@@ -143,39 +144,43 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
                         continue());
 <SLASH>(" "|"\t"|"\f")
                     => (YYBEGIN SLASH_M;
-                        buff_string := !buff_string ^ yytext;
+                        slash_string := yytext;
                         format_flag := true;
                         continue());
 <SLASH>"\n"         => (YYBEGIN SLASH_M;
-                        buff_string := !buff_string ^ "\n";
+                        slash_string := "\n";
                         format_flag := true;
                         lineNum := !lineNum + 1;
                         linePos := yypos :: !linePos;
                         continue());
 <SLASH>.            => (YYBEGIN SLASH_M;
-                        buff_string := !buff_string ^ yytext;
+                        slash_string := yytext;
                         format_flag := false;
                         continue());
 
-<SLASH_M>"\n"       => (buff_string := !buff_string ^ "\n";
+<SLASH_M>"\n"       => (slash_string := !slash_string ^ "\n";
                         format_flag := true;
                         lineNum := !lineNum + 1;
                         linePos := yypos :: !linePos;
                         continue());
 <SLASH_M>(" "|"\t"|"\f")
-                    => (buff_string := !buff_string ^ yytext;
+                    => (slash_string := !slash_string ^ yytext;
                         format_flag := true;
                         continue());
 <SLASH_M>"\\"       => (if !format_flag
-                          then YYBEGIN STRING
+                          then
+                            (buff_string := !buff_string ^ !slash_string;
+                             YYBEGIN STRING;
+                             continue())
                           else
                             (ErrorMsg.error yypos("illegal format \\f___f\\");
-                             YYBEGIN STRING);
-                        continue());
+                             YYBEGIN INITIAL;
+                             Tokens.STRING(!buff_string, !left_tag, yypos + 1))
+                        );
 <SLASH_M>"\""       => (YYBEGIN INITIAL;
                         ErrorMsg.error yypos("illegal escape");
-                        Tokens.STRING("", !left_tag, yypos + 1));
-<SLASH_M>.          => (buff_string := !buff_string ^ yytext;
+                        Tokens.STRING(!buff_string, !left_tag, yypos + 1));
+<SLASH_M>.          => (slash_string := !slash_string ^ yytext;
                         continue());
 
 
