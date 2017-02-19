@@ -102,7 +102,7 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
                             (ErrorMsg.error yypos ("illegal string");
                              Tokens.STRING("", !left_tag, yypos + 1)));
 <STRING>"\n"        => (YYBEGIN INITIAL;
-                        ErrorMsg.error yypos ("illegal string with \\n");
+                        ErrorMsg.error yypos ("illegal string having \\n");
                         valid_str := false;
                         lineNum := !lineNum + 1;
                         linePos := yypos :: !linePos;
