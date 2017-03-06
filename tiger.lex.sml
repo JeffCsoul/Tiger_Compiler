@@ -15,9 +15,19 @@ val format_flag     = ref false
 val valid_str       = ref true
 fun err(p1,p2)      = ErrorMsg.error p1
 
-fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
-
-
+fun eof() =
+let val pos = hd(!linePos) in
+(
+  if !nested_comment = 0
+    then
+      Tokens.EOF(pos,pos)
+    else
+    (
+      ErrorMsg.error pos ("comments not finished while EOF");
+      Tokens.EOF(pos,pos)
+    )
+)
+end
 end (* end of user routines *)
 exception LexError (* raised if illegal leaf action tried *)
 structure Internal =
@@ -635,12 +645,12 @@ val s = [
 ),
 (0, "")]
 fun f x = x 
-val s = map f (rev (tl (rev s))) 
+val s = List.map f (List.rev (tl (List.rev s))) 
 exception LexHackingError 
 fun look ((j,x)::r, i: int) = if i = j then x else look(r, i) 
   | look ([], i) = raise LexHackingError
 fun g {fin=x, trans=i} = {fin=x, trans=look(s,i)} 
-in Vector.fromList(map g 
+in Vector.fromList(List.map g 
 [{fin = [], trans = 0},
 {fin = [], trans = 1},
 {fin = [], trans = 1},
@@ -805,7 +815,7 @@ let fun continue() = lex() in
 	| action (i,(node::acts)::l) =
 		case node of
 		    Internal.N yyk => 
-			(let fun yymktext() = substring(!yyb,i0,i-i0)
+			(let fun yymktext() = String.substring(!yyb,i0,i-i0)
 			     val yypos = i0+ !yygone
 			open UserDeclarations Internal.StartStates
  in (yybufpos := i; case yyk of 
@@ -930,8 +940,7 @@ let fun continue() = lex() in
                         continue() end
 | 193 => (if !format_flag
                           then
-                            (buff_string := !buff_string ^ !slash_string;
-                             YYBEGIN STRING;
+                            (YYBEGIN STRING;
                              continue())
                           else
                             (ErrorMsg.error yypos("illegal format \\f___f\\");
@@ -979,14 +988,14 @@ let fun continue() = lex() in
 	     if trans = #trans(Vector.sub(Internal.tab,0))
 	       then action(l,NewAcceptingLeaves
 ) else	    let val newchars= if !yydone then "" else yyinput 1024
-	    in if (size newchars)=0
+	    in if (String.size newchars)=0
 		  then (yydone := true;
 		        if (l=i0) then UserDeclarations.eof ()
 		                  else action(l,NewAcceptingLeaves))
 		  else (if i0=l then yyb := newchars
-		     else yyb := substring(!yyb,i0,l-i0)^newchars;
+		     else yyb := String.substring(!yyb,i0,l-i0)^newchars;
 		     yygone := !yygone+i0;
-		     yybl := size (!yyb);
+		     yybl := String.size (!yyb);
 		     scan (s,AcceptingLeaves,l-i0,0))
 	    end
 	  else let val NewChar = Char.ord(Unsafe.CharVector.sub(!yyb,l))
@@ -997,7 +1006,7 @@ let fun continue() = lex() in
 	end
 	end
 (*
-	val start= if substring(!yyb,!yybufpos-1,1)="\n"
+	val start= if String.substring(!yyb,!yybufpos-1,1)="\n"
 then !yybegin+1 else !yybegin
 *)
 	in scan(!yybegin (* start *),nil,!yybufpos,!yybufpos)

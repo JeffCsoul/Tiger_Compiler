@@ -11,8 +11,19 @@ val format_flag     = ref false
 val valid_str       = ref true
 fun err(p1,p2)      = ErrorMsg.error p1
 
-fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
-
+fun eof() =
+  let val pos = hd(!linePos) in
+  (
+    if !nested_comment = 0
+      then
+        Tokens.EOF(pos,pos)
+      else
+      (
+        ErrorMsg.error pos ("comments not finished while EOF");
+        Tokens.EOF(pos,pos)
+      )
+  )
+  end
 
 %%
 %s COMMENT STRING SLASH SLASH_M;
@@ -169,8 +180,7 @@ fun eof()           = let val pos = hd(!linePos) in Tokens.EOF(pos,pos) end
                         continue());
 <SLASH_M>"\\"       => (if !format_flag
                           then
-                            (buff_string := !buff_string ^ !slash_string;
-                             YYBEGIN STRING;
+                            (YYBEGIN STRING;
                              continue())
                           else
                             (ErrorMsg.error yypos("illegal format \\f___f\\");
