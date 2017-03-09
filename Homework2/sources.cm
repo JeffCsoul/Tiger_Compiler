@@ -1,0 +1,15 @@
+Group is
+
+driver.sml
+errormsg.sml
+tokens.sig
+tokens.sml
+tiger.lex
+
+#if defined (NEW_CM)
+$/basis.cm
+$/smlnj-lib.cm
+#else
+smlnj-lib.cm
+#endif
+
