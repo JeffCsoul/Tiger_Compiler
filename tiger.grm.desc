@@ -1,3 +1,19 @@
+14 rules not reduced
+
+warning: rule <dec : tydec > will never be reduced
+warning: rule <dec : vardec > will never be reduced
+warning: rule <dec : fundec > will never be reduced
+warning: rule <tydec : TYPE ID EQ ty > will never be reduced
+warning: rule <ty : ID > will never be reduced
+warning: rule <ty : LBRACE tyfields RBRACE > will never be reduced
+warning: rule <ty : ARRAY OF ID > will never be reduced
+warning: rule <tyfields : empty > will never be reduced
+warning: rule <tyfields : ID COLON ID > will never be reduced
+warning: rule <tyfields : ID COLON ID COMMA tyfields > will never be reduced
+warning: rule <lvalue : ID > will never be reduced
+warning: rule <lvalue : lvalue_not_id > will never be reduced
+warning: rule <lvalue_not_id : lvalue DOT ID > will never be reduced
+warning: rule <lvalue_not_id : lvalue LBRACK exp RBRACK > will never be reduced
 
 state 0:
 
@@ -22,11 +38,11 @@ state 1:
 
 state 2:
 
-	exp : NIL .  (reduce by rule 1)
+	exp : NIL .  (reduce by rule 15)
 
 
 
-	.	reduce by rule 1
+	.	reduce by rule 15
 
 
 state 3:

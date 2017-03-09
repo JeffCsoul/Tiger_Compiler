@@ -11,9 +11,13 @@ structure A = Absyn
   | AND | OR | ASSIGN
   | ARRAY | IF | THEN | ELSE | WHILE | FOR | TO | DO | LET | IN | END | OF
   | BREAK | NIL
-  | FUNCTION | VAR | TYPE
+  | FUNCTION | VAR | TYPE | NEG
 
-%nonterm  exp | program of A.exp
+%nonterm
+  exp | program of A.exp | empty
+  | dec of A.dec | tydec of A.dec | vardec of A.dec | fundec of A.dec
+  | ty of A.ty | tyfields of A.field list
+  | lvalue of A.var | lvalue_not_id of A.var
 
 %pos int
 %verbose
@@ -32,11 +36,77 @@ structure A = Absyn
 %value INT (1)
 %value STRING ("")
 
-
-
+%right SEMICOLON
+%nonassoc DO OF
+%nonassoc THEN ELSE
+%left ASSIGN
+%left AND OR
+%nonassoc EQ NEQ LT LE GT GE
+%left PLUS MINUS
+%left TIMES DIVIDE
+%left NEG
 %%
 
 program	: exp				(exp)
 
+dec:
+  tydec
+    (tydec)
+  | vardec
+    (vardec)
+  | fundec
+    (fundec)
+
+tydec:
+  TYPE ID EQ ty
+    (A.TypeDec [{name = Symbol.symbol ID, ty = ty, pos = TYPEright}])
+
+ty:
+  ID
+  (* type-id *)
+    (A.NameTy (Symbol.symbol ID, IDleft))
+  | LBRACE tyfields RBRACE
+  (* {tyfields} *)
+    (A.RecordTy (tyfields))
+  | ARRAY OF ID
+  (* array of type-id*)
+    (A.ArrayTy (Symbol.symbol ID, IDleft))
+
+tyfields:
+  empty
+  (* empty list*)
+    (nil)
+  | ID COLON ID
+  (* id : type-id*)
+    ([{name = Symbol.symbol ID1,
+       escape = ref true,
+       typ = Symbol.symbol ID2,
+       pos = COLONright
+      }]
+    )
+  | ID COLON ID COMMA tyfields
+  (* id : type-id, id : type-id ....*)
+    ({name = Symbol.symbol ID1,
+      escape = ref true,
+      typ = Symbol.symbol ID2,
+      pos = COLONright
+     } :: tyfields
+    )
+
+lvalue:
+  ID
+  (* id *)
+    (A.SimpleVar(Symbol.symbol ID, IDleft))
+  | lvalue_not_id
+  (* lvalue.id | lvalue[exp]*)
+    (lvalue_not_id)
+
+lvalue_not_id:
+  lvalue DOT ID
+  (* lvalue.id *)
+    (A.FieldVar(lvalue, Symbol.symbol ID, DOTright))
+  | lvalue LBRACK exp RBRACK
+  (* lvalue[exp] *)
+    (A.SubscriptVar(lvalue, exp, RBRACKright))
 
 exp: NIL		(A.NilExp)
