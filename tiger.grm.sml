@@ -17,8 +17,8 @@ datatype lvalue_suffix = DotID of symbol
 
 fun retrive_suffix(v, DotID(idsym)::xs, pos) =
       retrive_suffix(A.FieldVar(v, idsym, pos), xs, pos)
-  | retrive_suffix(v, ArrayIdx(exp)::xs, pos) =
-      retrive_suffix(A.SubscriptVar(v, exp, pos), xs, pos)
+  | retrive_suffix(v, ArrayIdx(arrayidx)::xs, pos) =
+      retrive_suffix(A.SubscriptVar(v, arrayidx, pos), xs, pos)
   | retrive_suffix(v, nil, pos) = v
 
 
