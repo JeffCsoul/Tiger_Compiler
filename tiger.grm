@@ -164,9 +164,7 @@ exp:
 
 (* ---- sequence ----*)
 sequence:
-  exp
-    (exp)
-  | exp sequence_suffix
+  exp sequence_suffix
     (A.SeqExp((exp, expleft) :: sequence_suffix))
   | (* empty *)
     (A.SeqExp(nil))
@@ -214,8 +212,8 @@ decs:
 tydecs:
   tydec tydecs
     (tydec :: tydecs)
-  | (* empty *)
-    (nil)
+  | tydec
+    ([tydec])
 
 tydec:
   TYPE ID EQ ty
@@ -275,8 +273,8 @@ vardec:
 fundecs:
   fundec
     ([fundec])
-  | fundecs fundec
-    (fundecs @ [fundec])
+  | fundec fundecs
+    (fundec :: fundecs)
 
 fundec:
   FUNCTION ID LPAREN tyfields RPAREN EQ exp
