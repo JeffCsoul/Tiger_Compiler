@@ -1,0 +1,42 @@
+(* Important:
+
+    1. If you are not generating your lexer from your own tiger.lex file,
+       make sure to comment out the line in runsml that deletes the 
+       (previously generated) lexer.
+
+    2. If you are running tests on all the programs in syntax-and-sem-analysis,
+       note that test49.tig has a syntax error in it, i.e. you should get
+       a parse error for that program.
+*)
+
+To run the automated tests, here is what you should do:
+
+1. Edit the first three lines of the runsml files to indicate the 
+correct directories for the source code, the test cases directory 
+and the current directory. (Typically, you will want to leave the 
+last as is.)
+
+Remember that you should not use ~ in paths. You can use .., though. 
+
+Remember also that the test cases for which we have generated outputs 
+are all those in the syntax-and-sem-analysis directory, so it is only
+your relevant path to this directory that you should use for the 
+automated testing. 
+
+2. Make sure you do not have a file named parse.sml.bak in the code 
+directory that you want to preserve; if you do, move it somewhere else
+(or change the lines in runsml that make use of this name to save a
+copy of the original parse.sml file).
+
+3. Run ./runsml. This will run the driver for all files in the testcases 
+directory. The outputs will be compared with the correct results using 
+the unix diff command.
+
+4. If you don't want to run the test for all files, remove the line 
+in runsml which creates a listing of the files in the testing directory 
+in the file "files.list" and create your own  "files.list" with the 
+names of the testcases you need. The diff will show some errors like 
+"only present in correct_results".  This is because now we are producing 
+the results of only the files in "files.list".
+
+
