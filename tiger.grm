@@ -165,6 +165,8 @@ sequence:
     (exp)
   | exp sequence_suffix
     (A.SeqExp((exp, expleft) :: sequence_suffix))
+  | (* empty *)
+    (A.SeqExp(nil))
 
 sequence_suffix:
   SEMICOLON exp sequence_suffix
