@@ -5,11 +5,11 @@ open Symbol
 datatype lvalue_suffix = DotID of symbol
                        | ArrayIdx of A.exp
 
-fun retrive_suffix(v, DotID(idsym)::xs, pos) =
-      retrive_suffix(A.FieldVar(v, idsym, pos), xs, pos)
-  | retrive_suffix(v, ArrayIdx(arrayidx)::xs, pos) =
-      retrive_suffix(A.SubscriptVar(v, arrayidx, pos), xs, pos)
-  | retrive_suffix(v, nil, pos) = v
+fun retrieve_suffix(v, DotID(idsym)::xs, pos) =
+      retrieve_suffix(A.FieldVar(v, idsym, pos), xs, pos)
+  | retrieve_suffix(v, ArrayIdx(arrayidx)::xs, pos) =
+      retrieve_suffix(A.SubscriptVar(v, arrayidx, pos), xs, pos)
+  | retrieve_suffix(v, nil, pos) = v
 
 %%
 %term
@@ -164,10 +164,11 @@ exp:
 
 (* ---- sequence ----*)
 sequence:
-  exp
-    (exp)
-  | exp sequence_suffix
-    (A.SeqExp((exp, expleft) :: sequence_suffix))
+  exp sequence_suffix
+    (if List.length ((exp, expleft) :: sequence_suffix) = 1
+      then exp
+      else A.SeqExp((exp, expleft) :: sequence_suffix)
+    )
   | (* empty *)
     (A.SeqExp(nil))
 
@@ -299,7 +300,7 @@ fundec:
 (* lvalue *)
 lvalue:
   ID lvalue_back
-    (retrive_suffix(A.SimpleVar(symbol ID, IDleft), lvalue_back, IDleft))
+    (retrieve_suffix(A.SimpleVar(symbol ID, IDleft), lvalue_back, IDleft))
 lvalue_back:
   DOT ID lvalue_back
     (DotID(symbol ID)::lvalue_back)
