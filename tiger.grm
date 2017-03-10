@@ -164,7 +164,9 @@ exp:
 
 (* ---- sequence ----*)
 sequence:
-  exp sequence_suffix
+  exp
+    (exp)
+  | exp sequence_suffix
     (A.SeqExp((exp, expleft) :: sequence_suffix))
   | (* empty *)
     (A.SeqExp(nil))
