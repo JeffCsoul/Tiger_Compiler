@@ -31,7 +31,10 @@ fun retrive_suffix(v, DotID(idsym)::xs, pos) =
   | recordfields of (symbol * A.exp * pos) list
   | sequence of A.exp
   | sequence_suffix of (A.exp * pos) list
-  | dec of A.dec | tydec of A.dec | vardec of A.dec
+  | dec of A.dec
+  | tydec of {name: symbol, ty: A.ty, pos: pos}
+  | tydecs of {name: symbol, ty: A.ty, pos: pos} list
+  | vardec of A.dec
   | fundec of A.fundec | fundecs of A.fundec list
   | decs of A.dec list
   | ty of A.ty | tyfields of A.field list
@@ -194,8 +197,8 @@ funparams:
 
 (* declare *)
 dec:
-  tydec
-    (tydec)
+  tydecs
+    (A.TypeDec tydecs)
   | vardec
     (vardec)
   | fundecs
@@ -208,9 +211,15 @@ decs:
     (nil)
 
 (* ---- tydec ----*)
+tydecs:
+  tydec tydecs
+    (tydec :: tydecs)
+  | (* empty *)
+    (nil)
+
 tydec:
   TYPE ID EQ ty
-    (A.TypeDec [{name = symbol ID, ty = ty, pos = TYPEleft}])
+    ({name = symbol ID, ty = ty, pos = TYPEleft})
 
 ty:
   ID
