@@ -29,7 +29,8 @@ fun retrive_suffix(v, DotID(idsym)::xs, pos) =
   | program of A.exp
   | funparams of A.exp list
   | recordfields of (symbol * A.exp * pos) list
-  | sequence of (A.exp * pos) list
+  | sequence of A.exp
+  | sequence_suffix of (A.exp * pos) list
   | dec of A.dec | tydec of A.dec | vardec of A.dec
   | fundec of A.fundec | fundecs of A.fundec list
   | decs of A.dec list
@@ -127,7 +128,7 @@ exp:
     )
   (* sequence *)
   | LPAREN sequence RPAREN
-    (A.SeqExp sequence)
+    (sequence)
   (* assign *)
   | lvalue ASSIGN exp
     (A.AssignExp {var = lvalue, exp = exp, pos = lvalueleft})
@@ -160,10 +161,14 @@ exp:
 
 (* ---- sequence ----*)
 sequence:
-  exp SEMICOLON sequence
-    ((exp, expleft) :: sequence)
-  | exp
-    ([(exp, expleft)])
+  exp
+    (exp)
+  | exp sequence_suffix
+    (A.SeqExp((exp, expleft) :: sequence_suffix))
+
+sequence_suffix:
+  SEMICOLON exp sequence_suffix
+    ((exp, expleft) :: sequence_suffix)
   | (* empty *)
     (nil)
 
