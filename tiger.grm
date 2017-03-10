@@ -59,7 +59,7 @@ fun retrieve_suffix(v, DotID(idsym)::xs, pos) =
 %value STRING ("")
 
 %nonassoc FUNDEC TYDEC
-%nonassoc FUNCTION VAR TYPE THEN DO OF ASSIGN
+%nonassoc WHILE FOR LET END FUNCTION VAR TYPE THEN DO OF ASSIGN
 %right ELSE
 %left OR
 %left AND
