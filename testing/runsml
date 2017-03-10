@@ -1,0 +1,34 @@
+CODE_DIR='..'
+TESTCASE_DIR='../Homework2/testcases/syntax-and-sem-analysis'
+CURR_DIR=`pwd`
+#
+# Clean up the code directory
+# NOTE: Comment the next line out if you are not using your own scanner
+# rm -f $CODE_DIR/tiger.lex.sml
+# rm -f $CODE_DIR/tiger.grm.sml
+#
+# Update the parse.sml file to have the right directory names
+sed -i "/val dir_inname/c val dir_inname = \"$TESTCASE_DIR/\"" parse.sml
+sed -i "/val dir_outname/c val dir_outname = \"$CURR_DIR/outputs/\"" parse.sml
+#
+# Update the sml_input file to reflect the correct directory for the sml source
+sed -i "/CM.make /c CM.make \"$CODE_DIR/sources.cm\";" sml_input
+#
+# Save original parse.sml and copy the desired one for tests there
+mv $CODE_DIR/parse.sml $CODE_DIR/parse.sml.bak
+cp parse.sml $CODE_DIR/parse.sml
+#
+# Create a list of files to test
+ls $TESTCASE_DIR > files.list
+#
+# Clean up my outputs directory and run my parser
+rm outputs/*
+sml < sml_input
+#
+# Compare my outputs to the ones provided
+echo "Diffing the directories..."
+diff correct_outputs outputs
+echo "Done."
+#
+# Restore the original parse.sml file
+mv $CODE_DIR/parse.sml.bak $CODE_DIR/parse.sml

@@ -1,0 +1,41 @@
+LetExp([
+ FunctionDec[
+  (print_something,[
+   (c,true,int)],
+NONE,
+   IfExp(
+    OpExp(EqOp,
+     VarExp(
+      SimpleVar(c)),
+     IntExp(0)),
+    CallExp(print,[
+     StringExp("This is a simple print with 	 "ZERO" 
+")]),
+    IfExp(
+     OpExp(EqOp,
+      VarExp(
+       SimpleVar(c)),
+      IntExp(1)),
+     SeqExp[
+      CallExp(print,[
+       StringExp("ASCII characters specified using the \ddd format: 
+")]),
+      CallExp(print,[
+       StringExp("~~~~~~~~~~ 
+")]),
+      CallExp(print,[
+       StringExp("{{{{{{{{{ 
+")])],
+     IfExp(
+      OpExp(EqOp,
+       VarExp(
+        SimpleVar(c)),
+       IntExp(2)),
+      CallExp(print,[
+       StringExp("This is for skipping sequence of characters. I want to continue to next line. We should  skip all things between the two \'s  
+")]),
+      CallExp(print,[
+       StringExp("We are done - some control characters   
+")])))))]],
+ CallExp(print_something,[
+  IntExp(3)]))
