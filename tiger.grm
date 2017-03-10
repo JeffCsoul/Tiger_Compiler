@@ -22,7 +22,7 @@ fun retrieve_suffix(v, DotID(idsym)::xs, pos) =
   | AND | OR | ASSIGN
   | ARRAY | IF | THEN | ELSE | WHILE | FOR | TO | DO | LET | IN | END | OF
   | BREAK | NIL
-  | FUNCTION | VAR | TYPE | NEG
+  | FUNCTION | VAR | TYPE | NEG | FUNDEC | TYDEC
 
 %nonterm
   exp of A.exp
@@ -58,6 +58,7 @@ fun retrieve_suffix(v, DotID(idsym)::xs, pos) =
 %value INT (1)
 %value STRING ("")
 
+%nonassoc FUNDEC TYDEC
 %nonassoc FUNCTION VAR TYPE THEN DO OF ASSIGN
 %right ELSE
 %left OR
@@ -66,6 +67,7 @@ fun retrieve_suffix(v, DotID(idsym)::xs, pos) =
 %left PLUS MINUS
 %left TIMES DIVIDE
 %left NEG
+
 %%
 
 program	: exp				(exp)
@@ -198,11 +200,11 @@ funparams:
 
 (* declare *)
 dec:
-  tydecs
+  tydecs %prec TYDEC
     (A.TypeDec tydecs)
   | vardec
     (vardec)
-  | fundecs
+  | fundecs %prec FUNDEC
     (A.FunctionDec fundecs)
 
 decs:
@@ -213,8 +215,8 @@ decs:
 
 (* ---- tydec ----*)
 tydecs:
-  tydec tydecs
-    (tydec :: tydecs)
+  tydecs tydec
+    (tydecs @ [tydec])
   | tydec
     ([tydec])
 
@@ -276,8 +278,8 @@ vardec:
 fundecs:
   fundec
     ([fundec])
-  | fundec fundecs
-    (fundec :: fundecs)
+  | fundecs fundec
+    (fundecs @ [fundec])
 
 fundec:
   FUNCTION ID LPAREN tyfields RPAREN EQ exp

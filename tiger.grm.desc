@@ -1,7 +1,3 @@
-2 shift/reduce conflicts
-
-error:  state 29: shift/reduce conflict (shift FUNCTION, reduce by rule 55)
-error:  state 32: shift/reduce conflict (shift TYPE, reduce by rule 45)
 
 state 0:
 
@@ -541,22 +537,20 @@ state 27:
 state 28:
 
 	dec : fundecs .  (reduce by rule 41)
+	fundecs : fundecs . fundec 
 
+	FUNCTION	shift 36
 
+	fundec	goto 62
 
 	.	reduce by rule 41
 
-error:  state 29: shift/reduce conflict (shift FUNCTION, reduce by rule 55)
 
 state 29:
 
 	fundecs : fundec .  (reduce by rule 55)
-	fundecs : fundec . fundecs 
 
-	FUNCTION	shift 36
 
-	fundec	goto 29
-	fundecs	goto 62
 
 	.	reduce by rule 55
 
@@ -573,22 +567,20 @@ state 30:
 state 31:
 
 	dec : tydecs .  (reduce by rule 39)
-
-
-
-	.	reduce by rule 39
-
-error:  state 32: shift/reduce conflict (shift TYPE, reduce by rule 45)
-
-state 32:
-
-	tydecs : tydec . tydecs 
-	tydecs : tydec .  (reduce by rule 45)
+	tydecs : tydecs . tydec 
 
 	TYPE	shift 34
 
-	tydec	goto 32
-	tydecs	goto 63
+	tydec	goto 63
+
+	.	reduce by rule 39
+
+
+state 32:
+
+	tydecs : tydec .  (reduce by rule 45)
+
+
 
 	.	reduce by rule 45
 
@@ -1326,7 +1318,7 @@ state 61:
 
 state 62:
 
-	fundecs : fundec fundecs .  (reduce by rule 56)
+	fundecs : fundecs fundec .  (reduce by rule 56)
 
 
 
@@ -1335,7 +1327,7 @@ state 62:
 
 state 63:
 
-	tydecs : tydec tydecs .  (reduce by rule 44)
+	tydecs : tydecs tydec .  (reduce by rule 44)
 
 
 
@@ -2665,4 +2657,4 @@ state 138:
 	.	error
 
 484 of 1007 action table entries left after compaction
-107 goto table entries
+105 goto table entries

@@ -184,13 +184,13 @@ val table=let val actionRows =
 \\179\000\002\000\015\000\003\000\014\000\004\000\013\000\008\000\012\000\
 \\016\000\011\000\029\000\010\000\032\000\009\000\033\000\008\000\
 \\036\000\007\000\040\000\006\000\041\000\005\000\000\000\
-\\180\000\000\000\
+\\180\000\044\000\036\000\000\000\
 \\181\000\000\000\
-\\182\000\000\000\
+\\182\000\042\000\038\000\000\000\
 \\183\000\000\000\
 \\184\000\042\000\038\000\043\000\037\000\044\000\036\000\000\000\
 \\185\000\000\000\
-\\186\000\044\000\036\000\000\000\
+\\186\000\000\000\
 \\187\000\000\000\
 \\188\000\000\000\
 \\189\000\000\000\
@@ -204,7 +204,7 @@ val table=let val actionRows =
 \\195\000\015\000\028\000\016\000\027\000\017\000\026\000\018\000\025\000\
 \\019\000\024\000\020\000\023\000\021\000\022\000\022\000\021\000\
 \\023\000\020\000\024\000\019\000\025\000\018\000\026\000\017\000\000\000\
-\\196\000\042\000\038\000\000\000\
+\\196\000\000\000\
 \\197\000\000\000\
 \\198\000\015\000\028\000\016\000\027\000\017\000\026\000\018\000\025\000\
 \\019\000\024\000\020\000\023\000\021\000\022\000\022\000\021\000\
@@ -286,11 +286,11 @@ val gotoT =
 \\001\000\059\000\016\000\001\000\000\000\
 \\001\000\060\000\016\000\001\000\000\000\
 \\000\000\
+\\011\000\062\000\000\000\
 \\000\000\
-\\011\000\029\000\012\000\062\000\000\000\
 \\000\000\
+\\008\000\063\000\000\000\
 \\000\000\
-\\008\000\032\000\009\000\063\000\000\000\
 \\007\000\033\000\008\000\032\000\009\000\031\000\010\000\030\000\
 \\011\000\029\000\012\000\028\000\013\000\064\000\000\000\
 \\000\000\
@@ -552,6 +552,8 @@ fn (T 0) => "EOF"
   | (T 42) => "VAR"
   | (T 43) => "TYPE"
   | (T 44) => "NEG"
+  | (T 45) => "FUNDEC"
+  | (T 46) => "TYDEC"
   | _ => "bogus-term"
 local open Header in
 val errtermvalue=
@@ -561,12 +563,13 @@ fn (T 1) => MlyValue.ID(fn () => ("bogus")) |
 _ => MlyValue.VOID
 end
 val terms : term list = nil
- $$ (T 44) $$ (T 43) $$ (T 42) $$ (T 41) $$ (T 40) $$ (T 39) $$ (T 38)
- $$ (T 37) $$ (T 36) $$ (T 35) $$ (T 34) $$ (T 33) $$ (T 32) $$ (T 31)
- $$ (T 30) $$ (T 29) $$ (T 28) $$ (T 27) $$ (T 26) $$ (T 25) $$ (T 24)
- $$ (T 23) $$ (T 22) $$ (T 21) $$ (T 20) $$ (T 19) $$ (T 18) $$ (T 17)
- $$ (T 16) $$ (T 15) $$ (T 14) $$ (T 13) $$ (T 12) $$ (T 11) $$ (T 10)
- $$ (T 9) $$ (T 8) $$ (T 7) $$ (T 6) $$ (T 5) $$ (T 4) $$ (T 0)end
+ $$ (T 46) $$ (T 45) $$ (T 44) $$ (T 43) $$ (T 42) $$ (T 41) $$ (T 40)
+ $$ (T 39) $$ (T 38) $$ (T 37) $$ (T 36) $$ (T 35) $$ (T 34) $$ (T 33)
+ $$ (T 32) $$ (T 31) $$ (T 30) $$ (T 29) $$ (T 28) $$ (T 27) $$ (T 26)
+ $$ (T 25) $$ (T 24) $$ (T 23) $$ (T 22) $$ (T 21) $$ (T 20) $$ (T 19)
+ $$ (T 18) $$ (T 17) $$ (T 16) $$ (T 15) $$ (T 14) $$ (T 13) $$ (T 12)
+ $$ (T 11) $$ (T 10) $$ (T 9) $$ (T 8) $$ (T 7) $$ (T 6) $$ (T 5) $$ 
+(T 4) $$ (T 0)end
 structure Actions =
 struct 
 exception mlyAction of int
@@ -977,14 +980,14 @@ end
 )
  in ( LrTable.NT 12, ( result, defaultPos, defaultPos), rest671)
 end
-|  ( 44, ( ( _, ( MlyValue.tydecs tydecs1, _, tydecs1right)) :: ( _, (
- MlyValue.tydec tydec1, tydec1left, _)) :: rest671)) => let val  
-result = MlyValue.tydecs (fn _ => let val  (tydec as tydec1) = tydec1
- ()
- val  (tydecs as tydecs1) = tydecs1 ()
- in (tydec :: tydecs)
+|  ( 44, ( ( _, ( MlyValue.tydec tydec1, _, tydec1right)) :: ( _, ( 
+MlyValue.tydecs tydecs1, tydecs1left, _)) :: rest671)) => let val  
+result = MlyValue.tydecs (fn _ => let val  (tydecs as tydecs1) = 
+tydecs1 ()
+ val  (tydec as tydec1) = tydec1 ()
+ in (tydecs @ [tydec])
 end)
- in ( LrTable.NT 8, ( result, tydec1left, tydecs1right), rest671)
+ in ( LrTable.NT 8, ( result, tydecs1left, tydec1right), rest671)
 end
 |  ( 45, ( ( _, ( MlyValue.tydec tydec1, tydec1left, tydec1right)) :: 
 rest671)) => let val  result = MlyValue.tydecs (fn _ => let val  (
@@ -1102,14 +1105,14 @@ end)
  in ( LrTable.NT 11, ( result, fundec1left, fundec1right), rest671)
 
 end
-|  ( 56, ( ( _, ( MlyValue.fundecs fundecs1, _, fundecs1right)) :: ( _
-, ( MlyValue.fundec fundec1, fundec1left, _)) :: rest671)) => let val 
- result = MlyValue.fundecs (fn _ => let val  (fundec as fundec1) = 
-fundec1 ()
- val  (fundecs as fundecs1) = fundecs1 ()
- in (fundec :: fundecs)
+|  ( 56, ( ( _, ( MlyValue.fundec fundec1, _, fundec1right)) :: ( _, (
+ MlyValue.fundecs fundecs1, fundecs1left, _)) :: rest671)) => let val 
+ result = MlyValue.fundecs (fn _ => let val  (fundecs as fundecs1) = 
+fundecs1 ()
+ val  (fundec as fundec1) = fundec1 ()
+ in (fundecs @ [fundec])
 end)
- in ( LrTable.NT 11, ( result, fundec1left, fundecs1right), rest671)
+ in ( LrTable.NT 11, ( result, fundecs1left, fundec1right), rest671)
 
 end
 |  ( 57, ( ( _, ( MlyValue.exp exp1, _, exp1right)) :: _ :: _ :: ( _, 
@@ -1286,6 +1289,10 @@ ParserData.MlyValue.VOID,p1,p2))
 fun TYPE (p1,p2) = Token.TOKEN (ParserData.LrTable.T 43,(
 ParserData.MlyValue.VOID,p1,p2))
 fun NEG (p1,p2) = Token.TOKEN (ParserData.LrTable.T 44,(
+ParserData.MlyValue.VOID,p1,p2))
+fun FUNDEC (p1,p2) = Token.TOKEN (ParserData.LrTable.T 45,(
+ParserData.MlyValue.VOID,p1,p2))
+fun TYDEC (p1,p2) = Token.TOKEN (ParserData.LrTable.T 46,(
 ParserData.MlyValue.VOID,p1,p2))
 end
 end
