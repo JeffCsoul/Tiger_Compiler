@@ -1,4 +1,4 @@
-3 reduce/reduce conflicts
+4 reduce/reduce conflicts
 8 shift/reduce conflicts
 
 error:  state 5: reduce/reduce conflict between rule 44 and rule 46 on IN
@@ -11,6 +11,7 @@ error:  state 33: reduce/reduce conflict between rule 44 and rule 46 on IN
 error:  state 33: shift/reduce conflict (shift TYPE, reduce by rule 46)
 error:  state 33: shift/reduce conflict (shift VAR, reduce by rule 46)
 error:  state 33: shift/reduce conflict (shift FUNCTION, reduce by rule 46)
+error:  state 42: reduce/reduce conflict between rule 33 and rule 29 on END
 error:  state 42: reduce/reduce conflict between rule 33 and rule 29 on RPAREN
 
 state 0:
@@ -104,7 +105,7 @@ error:  state 5: shift/reduce conflict (shift FUNCTION, reduce by rule 46)
 
 state 5:
 
-	exp : LET . decs IN exp END 
+	exp : LET . decs IN sequence END 
 
 	IN	reduce by rule 44
 	FUNCTION	shift 36
@@ -545,7 +546,7 @@ state 26:
 
 state 27:
 
-	exp : LET decs . IN exp END 
+	exp : LET decs . IN sequence END 
 
 	IN	shift 61
 
@@ -771,6 +772,7 @@ state 41:
 
 	.	error
 
+error:  state 42: reduce/reduce conflict between rule 33 and rule 29 on END
 error:  state 42: reduce/reduce conflict between rule 33 and rule 29 on RPAREN
 
 state 42:
@@ -804,6 +806,7 @@ state 42:
 	GE	shift 17
 	AND	shift 16
 	OR	shift 15
+	END	reduce by rule 29
 
 	sequence_suffix	goto 72
 
@@ -1324,7 +1327,7 @@ state 60:
 
 state 61:
 
-	exp : LET decs IN . exp END 
+	exp : LET decs IN . sequence END 
 
 	ID	shift 13
 	INT	shift 12
@@ -1338,10 +1341,11 @@ state 61:
 	BREAK	shift 4
 	NIL	shift 3
 
-	exp	goto 80
+	exp	goto 42
+	sequence	goto 80
 	lvalue	goto 1
 
-	.	error
+	.	reduce by rule 31
 
 
 state 62:
@@ -1626,32 +1630,8 @@ state 79:
 
 state 80:
 
-	exp : exp . PLUS exp 
-	exp : exp . MINUS exp 
-	exp : exp . TIMES exp 
-	exp : exp . DIVIDE exp 
-	exp : exp . EQ exp 
-	exp : exp . NEQ exp 
-	exp : exp . LT exp 
-	exp : exp . LE exp 
-	exp : exp . GT exp 
-	exp : exp . GE exp 
-	exp : exp . AND exp 
-	exp : exp . OR exp 
-	exp : LET decs IN exp . END 
+	exp : LET decs IN sequence . END 
 
-	PLUS	shift 26
-	MINUS	shift 25
-	TIMES	shift 24
-	DIVIDE	shift 23
-	EQ	shift 22
-	NEQ	shift 21
-	LT	shift 20
-	LE	shift 19
-	GT	shift 18
-	GE	shift 17
-	AND	shift 16
-	OR	shift 15
 	END	shift 96
 
 
@@ -1963,7 +1943,7 @@ state 95:
 
 state 96:
 
-	exp : LET decs IN exp END .  (reduce by rule 27)
+	exp : LET decs IN sequence END .  (reduce by rule 27)
 
 
 
@@ -2708,5 +2688,5 @@ state 138:
 
 	.	error
 
-511 of 1022 action table entries left after compaction
-105 goto table entries
+500 of 1011 action table entries left after compaction
+106 goto table entries
