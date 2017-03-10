@@ -22,7 +22,8 @@ open Symbol
   | funparams of A.exp list
   | recordfields of (symbol * A.exp * pos) list
   | sequence of (A.exp * pos) list
-  | dec of A.dec | tydec of A.dec | vardec of A.dec | fundec of A.dec
+  | dec of A.dec | tydec of A.dec | vardec of A.dec
+  | fundec of A.fundec | fundecs of A.fundec list
   | decs of A.dec list
   | ty of A.ty | tyfields of A.field list
   | lvalue of A.var | lvalue_not_id of A.var
@@ -82,6 +83,32 @@ exp:
               right = exp,
               pos = MINUSleft})
     )
+  (* eq series *)
+  | exp EQ exp
+    (A.OpExp({left = exp1, oper = A.EqOp, right = exp2, pos = exp1left}))
+  | exp NEQ exp
+    (A.OpExp({left = exp1, oper = A.NeqOp, right = exp2, pos = exp1left}))
+  | exp LT exp
+    (A.OpExp({left = exp1, oper = A.LtOp, right = exp2, pos = exp1left}))
+  | exp LE exp
+    (A.OpExp({left = exp1, oper = A.LeOp, right = exp2, pos = exp1left}))
+  | exp GT exp
+    (A.OpExp({left = exp1, oper = A.GtOp, right = exp2, pos = exp1left}))
+  | exp GE exp
+    (A.OpExp({left = exp1, oper = A.GeOp, right = exp2, pos = exp1left}))
+  (* bool *)
+  | exp AND exp
+    (A.IfExp({test = exp1,
+              then' = exp2,
+              else' = SOME(A.IntExp(0)),
+              pos = exp1left})
+    )
+  | exp OR exp
+    (A.IfExp({test = exp1,
+              then' = A.IntExp(1),
+              else' = SOME exp2,
+              pos = exp1left})
+    )
   (* record *)
   | ID LBRACE recordfields RBRACE
     (A.RecordExp {fields = recordfields,
@@ -116,6 +143,10 @@ exp:
     (A.BreakExp(BREAKleft))
   | LET decs IN exp END
     (A.LetExp {decs = decs, body = exp, pos = LETleft})
+  (* array initial *)
+  | ID LBRACK exp RBRACK OF exp
+    (A.ArrayExp {typ = symbol ID, size = exp1, init = exp2, pos = IDleft})
+
 
 (* ---- sequence ----*)
 sequence:
@@ -150,8 +181,8 @@ dec:
     (tydec)
   | vardec
     (vardec)
-  | fundec
-    (fundec)
+  | fundecs
+    (A.FunctionDec fundecs)
 
 decs:
   dec decs
@@ -216,22 +247,28 @@ vardec:
     )
 
 (* ---- fundec ----*)
+fundecs:
+  fundec
+    ([fundec])
+  | fundec fundecs
+    (fundec :: fundecs)
+
 fundec:
   FUNCTION ID LPAREN tyfields RPAREN EQ exp
   (* function id (tyfields) = exp *)
-    (A.FunctionDec ([{name = symbol ID,
-                      params = tyfields,
-                      result = NONE,
-                      body = exp,
-                      pos = LPARENright}])
+    ({name = symbol ID,
+      params = tyfields,
+      result = NONE,
+      body = exp,
+      pos = LPARENright}
     )
   | FUNCTION ID LPAREN tyfields RPAREN COLON ID EQ exp
   (* function id (tyfields) : type-id = exp*)
-    (A.FunctionDec ([{name = symbol ID1,
-                      params = tyfields,
-                      result = SOME (symbol ID2, ID2left),
-                      body = exp,
-                      pos = LPARENright}])
+    ({name = symbol ID1,
+      params = tyfields,
+      result = SOME (symbol ID2, ID2left),
+      body = exp,
+      pos = LPARENright}
     )
 
 lvalue:
