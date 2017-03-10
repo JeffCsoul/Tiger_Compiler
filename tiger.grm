@@ -155,8 +155,8 @@ exp:
   (* break *)
   | BREAK
     (A.BreakExp(BREAKleft))
-  | LET decs IN exp END
-    (A.LetExp {decs = decs, body = exp, pos = LETleft})
+  | LET decs IN sequence END
+    (A.LetExp {decs = decs, body = sequence, pos = LETleft})
   (* array initial *)
   | ID LBRACK exp RBRACK OF exp
     (A.ArrayExp {typ = symbol ID, size = exp1, init = exp2, pos = IDleft})
