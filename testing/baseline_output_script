@@ -1,0 +1,440 @@
+Standard ML of New Jersey v110.71 [built: Fri Feb  5 14:23:17 2010]
+- [autoloading]
+[library $smlnj/cm/cm.cm is stable]
+[library $smlnj/internal/cm-sig-lib.cm is stable]
+[library $/pgraph.cm is stable]
+[library $smlnj/internal/srcpath-lib.cm is stable]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+[scanning ../hw4/sources.cm]
+[attempting to load plugin $/lex-ext.cm]
+[library $/lex-ext.cm is stable]
+[library $smlnj/cm/tools.cm is stable]
+[library $smlnj/internal/cm-lib.cm is stable]
+[plugin $/lex-ext.cm loaded successfully]
+[attempting to load plugin $/mllex-tool.cm]
+[library $/mllex-tool.cm is stable]
+[plugin $/mllex-tool.cm loaded successfully]
+[attempting to load plugin $/grm-ext.cm]
+[library $/grm-ext.cm is stable]
+[plugin $/grm-ext.cm loaded successfully]
+[attempting to load plugin $/mlyacc-tool.cm]
+[library $/mlyacc-tool.cm is stable]
+[plugin $/mlyacc-tool.cm loaded successfully]
+[library $/ml-yacc-lib.cm is stable]
+[library $SMLNJ-LIB/Util/smlnj-lib.cm is stable]
+[library $SMLNJ-ML-YACC-LIB/ml-yacc-lib.cm is stable]
+[loading ../hw4/(sources.cm):table.sig]
+[loading ../hw4/(sources.cm):table.sml]
+[loading ../hw4/(sources.cm):symbol.sml]
+[loading ../hw4/(sources.cm):env.sml]
+[loading ../hw4/(sources.cm):tiger.grm.sig]
+[loading ../hw4/(sources.cm):errormsg.sml]
+[loading ../hw4/(sources.cm):absyn.sml]
+[loading ../hw4/(sources.cm):prabsyn.sml]
+[loading ../hw4/(sources.cm):prtype.sml]
+[loading ../hw4/(sources.cm):tiger.grm.sml]
+[loading ../hw4/(sources.cm):tiger.lex.sml]
+[loading ../hw4/(sources.cm):semant.sml]
+[loading ../hw4/(sources.cm):parse.sml]
+[New bindings added.]
+val it = true : bool
+Parsing... escapes.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... merge.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... noLets-Arith.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... noLets-For.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... noLets-If.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... noLets-While.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... queens.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... simpleType.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... simpleVar.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... strings.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test10.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test10.tig:2.1:Error: unit type expected for body of while
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test11.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test11.tig:2.1:Error: high value of for must be of integer type
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test11.tig:3.2:Error: illegal assignment to loop control variable
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test12.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test13.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test13.tig:3.1:Error: right argument must be of integer type
+
+
+The type of the program parsed:
+INT
+
+Parsing... test14.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test14.tig:12.5:Error: right argument must be of record type identical to left
+
+
+The type of the program parsed:
+INT
+
+Parsing... test15.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test15.tig:3.1:Error: unit type expected for then expression
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test16.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test16.tig:4.1:Error: cyclic type definition for a
+
+
+The type of the program parsed:
+STRING
+
+Parsing... test17.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test17.tig:4.23:Error: Undefined type symbol treelist
+
+
+The type of the program parsed:
+INT
+
+Parsing... test18.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test18.tig:5.4:Error: undefined function do_nothing2
+
+
+The type of the program parsed:
+INT
+
+Parsing... test19.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test19.tig:8.16:Error: undefined variable a
+
+
+The type of the program parsed:
+INT
+
+Parsing... test1.tig.....
+
+
+The type of the program parsed:
+array[INT] of INT
+
+Parsing... test20.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test20.tig:3.18:Error: undefined variable i
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test21.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test21.tig:8.9:Error: right argument to * not of integer type
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test21.tig:5.1:Error: function body not of unit type
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test22.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test22.tig:7.6:Error: no record field with name nam
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test23.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test23.tig:7.2:Error: string expression expected
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test23.tig:8.2:Error: integer expression expected
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test24.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test24.tig:5.3:Error: non-array type used in indexed access
+
+
+The type of the program parsed:
+ERROR
+
+Parsing... test25.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test25.tig:5.3:Error: non-record type used in record selection
+
+
+The type of the program parsed:
+ERROR
+
+Parsing... test26.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test26.tig:3.1:Error: right argument to + not of integer type
+
+
+The type of the program parsed:
+INT
+
+Parsing... test27.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... test28.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test28.tig:7.2:Error: (record) type does not match definition
+
+
+The type of the program parsed:
+record1{
+    name: STRING
+    id: INT}
+
+Parsing... test29.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test29.tig:7.2:Error (array) type does not match definition
+
+
+The type of the program parsed:
+array[INT] of INT
+
+Parsing... test2.tig.....
+
+
+The type of the program parsed:
+array[INT] of INT
+
+Parsing... test30.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... test31.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test31.tig:3.2:Error: integer expression expected
+
+
+The type of the program parsed:
+INT
+
+Parsing... test32.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test32.tig:6.11:Error: integer expression expected in array initialization
+
+
+The type of the program parsed:
+INT
+
+Parsing... test33.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test33.tig:3.10:Error: undefined type symbol rectype
+
+
+The type of the program parsed:
+INT
+
+Parsing... test34.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test34.tig:5.2:Error: integer expression expected at argument position 1
+
+
+The type of the program parsed:
+INT
+
+Parsing... test35.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test35.tig:5.2:Error: integer expression expected at argument position 1
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test35.tig:5.2:Error: function g applied to too few arguments
+
+
+The type of the program parsed:
+INT
+
+Parsing... test36.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test36.tig:5.2:Error: functiong applied to too many arguments
+
+
+The type of the program parsed:
+INT
+
+Parsing... test37.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... test38.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test38.tig:5.2:Error: type a multiply defined in mutually recursive block
+
+
+The type of the program parsed:
+INT
+
+Parsing... test39.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test39.tig:5.2:Error: function g multiply defined in mutually recursive block
+
+
+The type of the program parsed:
+INT
+
+Parsing... test3.tig.....
+
+
+The type of the program parsed:
+record1{
+    name: STRING
+    age: INT}
+
+Parsing... test40.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test40.tig:3.2:Error: function body not of unit type
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test41.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... test42.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test43.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test43.tig:4.2:Error: unit type not valid for initializing expression
+
+
+The type of the program parsed:
+INT
+
+Parsing... test44.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test45.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test45.tig:5.2:Error: variable being declared of indeterminate record type
+
+
+The type of the program parsed:
+ERROR
+
+Parsing... test46.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... test47.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... test48.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... test49.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test49.tig:5.18:syntax error: inserting  OR
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test49.tig:5.10:Error: undefined variable rectype
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test49.tig:5.10:Error: types of conditional branches do not match
+
+
+The type of the program parsed:
+ERROR
+
+Parsing... test4.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... test5.tig.....
+
+
+The type of the program parsed:
+record1{
+    hd: INT
+    tl: record1}
+
+Parsing... test6.tig.....
+
+
+The type of the program parsed:
+UNIT
+
+Parsing... test7.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... test8.tig.....
+
+
+The type of the program parsed:
+INT
+
+Parsing... test9.tig.....
+/web/classes/Spring-2017/csci5161/resources/hws/testcases/syntax-and-sem-analysis/test9.tig:3.1:Error: types of conditional branches do not match
+
+
+The type of the program parsed:
+ERROR
+
+val it = () : unit
+- 

@@ -3,7 +3,7 @@ LetExp([
   (g,[
    (a,true,int),
    (b,true,string)],
-SOME(int),
+   SOME(int),
    VarExp(
     SimpleVar(a)))]],
  CallExp(g,[

@@ -3,20 +3,17 @@ LetExp([
   (do_nothing1,[
    (a,true,int),
    (b,true,string)],
-SOME(int),
+   SOME(int),
    SeqExp[
     CallExp(do_nothing2,[
      OpExp(PlusOp,
       VarExp(
        SimpleVar(a)),
       IntExp(1))]),
-    IntExp(0)])],
- VarDec(d,true,NONE,
-  IntExp(0)),
- FunctionDec[
+    IntExp(0)]),
   (do_nothing2,[
    (d,true,int)],
-SOME(string),
+   SOME(string),
    SeqExp[
     CallExp(do_nothing1,[
      VarExp(

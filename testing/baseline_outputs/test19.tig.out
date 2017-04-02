@@ -3,7 +3,7 @@ LetExp([
   (do_nothing1,[
    (a,true,int),
    (b,true,string)],
-SOME(int),
+   SOME(int),
    SeqExp[
     CallExp(do_nothing2,[
      OpExp(PlusOp,
@@ -13,11 +13,11 @@ SOME(int),
     IntExp(0)]),
   (do_nothing2,[
    (d,true,int)],
-SOME(string),
+   SOME(string),
    SeqExp[
     CallExp(do_nothing1,[
      VarExp(
-      SimpleVar(d)),
+      SimpleVar(a)),
      StringExp("str")]),
     StringExp(" ")])]],
  CallExp(do_nothing1,[

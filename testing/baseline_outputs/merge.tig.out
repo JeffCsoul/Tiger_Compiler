@@ -8,14 +8,14 @@ LetExp([
  FunctionDec[
   (readint,[
    (any,true,any)],
-SOME(int),
+   SOME(int),
    LetExp([
     VarDec(i,true,NONE,
      IntExp(0)),
     FunctionDec[
      (isdigit,[
       (s,true,string)],
-SOME(int),
+      SOME(int),
       IfExp(
        OpExp(GeOp,
         CallExp(ord,[
@@ -31,7 +31,7 @@ SOME(int),
          StringExp("9")])),
        IntExp(0))),
      (skipto,[],
-NONE,
+      NONE,
       WhileExp(
        IfExp(
         OpExp(EqOp,
@@ -86,7 +86,7 @@ NONE,
     (rest,true,list)])],
  FunctionDec[
   (readlist,[],
-SOME(list),
+   SOME(list),
    LetExp([
     VarDec(any,true,NONE,
      RecordExp(any,[
@@ -113,7 +113,7 @@ SOME(list),
   (merge,[
    (a,true,list),
    (b,true,list)],
-SOME(list),
+   SOME(list),
    IfExp(
     OpExp(EqOp,
      VarExp(
@@ -170,12 +170,12 @@ SOME(list),
            rest))]))]))))),
   (printint,[
    (i,true,int)],
-NONE,
+   NONE,
    LetExp([
     FunctionDec[
      (f,[
       (i,true,int)],
-NONE,
+      NONE,
       IfExp(
        OpExp(GtOp,
         VarExp(
@@ -226,7 +226,7 @@ NONE,
        StringExp("0")]))))),
   (printlist,[
    (l,true,list)],
-NONE,
+   NONE,
    IfExp(
     OpExp(EqOp,
      VarExp(

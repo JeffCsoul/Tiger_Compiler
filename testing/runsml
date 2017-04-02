@@ -1,11 +1,21 @@
-CODE_DIR='..'
+#!/bin/bash
+NOLEX=true
+NOPARSER=true
+CODE_DIR='../hw4'
 TESTCASE_DIR='../testcases/syntax-and-sem-analysis'
 CURR_DIR=`pwd`
-#
-# Clean up the code directory
-# NOTE: Comment the next line out if you are not using your own scanner
-# rm -f $CODE_DIR/tiger.lex.sml
-# rm -f $CODE_DIR/tiger.grm.sml
+# 
+# Clean up the code directory and install given lexer and parser if needed
+rm -f $CODE_DIR/tiger.lex.sml
+if [ $NOLEX = true ]; then 
+   cp tiger.lex.sml $CODE_DIR/
+fi
+rm -f $CODE_DIR/tiger.grm.sml
+rm -f $CODE_DIR/tiger.grm.sig
+if [ $NOPARSER = true ]; then 
+  cp tiger.grm.sig $CODE_DIR/
+  cp tiger.grm.sml $CODE_DIR/
+fi
 #
 # Update the parse.sml file to have the right directory names
 sed -i "/val dir_inname/c val dir_inname = \"$TESTCASE_DIR/\"" parse.sml
@@ -17,7 +27,7 @@ sed -i "/CM.make /c CM.make \"$CODE_DIR/sources.cm\";" sml_input
 # Save original parse.sml and copy the desired one for tests there
 mv $CODE_DIR/parse.sml $CODE_DIR/parse.sml.bak
 cp parse.sml $CODE_DIR/parse.sml
-#
+# 
 # Create a list of files to test
 ls $TESTCASE_DIR > files.list
 #
@@ -25,10 +35,23 @@ ls $TESTCASE_DIR > files.list
 rm outputs/*
 sml < sml_input
 #
-# Compare my outputs to the ones provided
-echo "Diffing the directories..."
-diff correct_outputs outputs
-echo "Done."
+# Run my semantic analysis program and save screen interaction to file
+sml < sml_input > my_output_script
+#
+# Comparing my parser output to those of the instructors; nothing new
+# from hw3, this is simply comparing the abstract syntax generated
+echo -e "\nComparing my abstract syntax to a baseline abstract syntax..."
+diff baseline_outputs outputs
+echo -e "Done.\n"
+#
+# Comparing the types and error messages I get to a "baseline." I would
+# probably not do this automatically because error messages are a personal
+# choice. Instead, I would do the comparison manually perhaps using meld.
+echo "Comparing my error messages to those of a baseline semantic analyzer..."
+sed -i 's,\/web\/classes\/Spring-2017\/csci5161\/resources\/hws\/testcases\/syntax-and-sem-analysis,'$TESTCASE_DIR', g' baseline_output_script
+diff baseline_output_script my_output_script
+echo -e "Done."
 #
 # Restore the original parse.sml file
 mv $CODE_DIR/parse.sml.bak $CODE_DIR/parse.sml
+

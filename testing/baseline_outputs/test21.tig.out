@@ -2,7 +2,7 @@ LetExp([
  FunctionDec[
   (nfactor,[
    (n,true,int)],
-SOME(int),
+   NONE,
    IfExp(
     OpExp(EqOp,
      VarExp(

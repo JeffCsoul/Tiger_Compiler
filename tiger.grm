@@ -1,4 +1,4 @@
-structure A = Absyn
+functor A = AbsynFun
 
 open Symbol
 
@@ -48,6 +48,11 @@ fun retrieve_suffix(v, DotID(idsym)::xs, pos) =
 %noshift EOF
 
 %name Tiger
+
+%header (functor TigerLrValsFun(structure Token : TOKEN
+                                structure A: ABSYN
+                                structure Symbol: SYMBOL
+                                sharing type A.symbol=Symbol.symbol))
 
 %keyword WHILE FOR TO BREAK LET IN END FUNCTION VAR TYPE ARRAY IF THEN ELSE
 	DO OF NIL

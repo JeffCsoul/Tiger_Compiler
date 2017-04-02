@@ -9,16 +9,16 @@ LetExp([
  FunctionDec[
   (foo,[
    (n,true,int)],
-NONE,
+   NONE,
    ForExp(
-i,true,
+    i,true,
     IntExp(1),
     IntExp(10),
     LetExp([
      FunctionDec[
       (bb,[
        (z,true,int)],
-SOME(int),
+       SOME(int),
        IfExp(
         VarExp(
          SimpleVar(z)),

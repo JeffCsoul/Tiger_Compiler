@@ -7,8 +7,11 @@ table.sig
 table.sml
 symbol.sml
 parse.sml
+prtype.sml
 tiger.lex
 tiger.grm
+semant.sml
+env.sml
 
 $/basis.cm
 $/smlnj-lib.cm

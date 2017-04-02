@@ -1,8 +1,21 @@
-structure PrintAbsyn : 
-     sig val print : TextIO.outstream * Absyn.exp -> unit end =
+(* This file differs from that in hw3 in that the code has been functorized *)
+
+signature PRINTABSSYN =
+sig
+
+  type exp
+
+  val print : TextIO.outstream * exp -> unit
+
+end
+
+
+functor PrintAbsynFun(structure A: ABSYN
+                      structure Symbol: SYMBOL
+                        sharing type A.symbol = Symbol.symbol): PRINTABSSYN =
 struct
 
-  structure A = Absyn
+type exp = A.exp
 
 fun print (outstream, e0) =
  let fun say s =  TextIO.output(outstream,s)
@@ -71,7 +84,8 @@ fun print (outstream, e0) =
 		 exp(body,d+1); say ")")
     | exp(A.ForExp{var=v,escape=b,lo,hi,body,pos},d) =
 		(indent d; sayln "ForExp(";
-		 say(Symbol.name v); say ","; say(Bool.toString (!b)); sayln ",";
+		 indent (d+1); say(Symbol.name v); say ","; 
+                                say(Bool.toString (!b)); sayln ",";
 		 exp(lo,d+1); sayln ","; exp(hi,d+1); sayln ",";
 		 exp(body,d+1); say ")")
     | exp(A.BreakExp p, d) = (indent d; say "BreakExp")
@@ -90,7 +104,8 @@ fun print (outstream, e0) =
 			 say ","; say(Symbol.name typ); say ")")
 		fun f({name,params,result,body,pos},d) =
 		   (indent d; say "("; say (Symbol.name name); say ",[";
-		    dolist d field params; sayln "],";
+		    dolist d field params; sayln "],"; 
+                    indent (d+1);
 		    case result of NONE => say "NONE"
 			 | SOME(s,_) => (say "SOME("; say(Symbol.name s); say ")");
 		    sayln ","; exp(body,d+1); say ")")

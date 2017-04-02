@@ -36,10 +36,10 @@ LetExp([
    IntExp(0))),
  FunctionDec[
   (printboard,[],
-NONE,
+   NONE,
    SeqExp[
     ForExp(
-i,true,
+     i,true,
      IntExp(0),
      OpExp(MinusOp,
       VarExp(
@@ -47,7 +47,7 @@ i,true,
       IntExp(1)),
      SeqExp[
       ForExp(
-j,true,
+       j,true,
        IntExp(0),
        OpExp(MinusOp,
         VarExp(
@@ -73,7 +73,7 @@ j,true,
 ")])]),
   (try,[
    (c,true,int)],
-NONE,
+   NONE,
    IfExp(
     OpExp(EqOp,
      VarExp(
@@ -82,7 +82,7 @@ NONE,
       SimpleVar(N))),
     CallExp(printboard,[]),
     ForExp(
-r,true,
+     r,true,
      IntExp(0),
      OpExp(MinusOp,
       VarExp(
