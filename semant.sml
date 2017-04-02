@@ -57,7 +57,7 @@ fun transExp venv tenv e =
                   )
                 else
                   (
-                    error pos ("Error args num: " ^ Symbol.name func);
+                    error pos ("Error args number: " ^ Symbol.name func);
                     result
                   )
               )
@@ -93,7 +93,8 @@ fun transExp venv tenv e =
         | tvar (A.FieldVar (v, id, pos)) = E.NIL
 
         | tvar (A.SubscriptVar (v, e, pos)) = E.NIL
-      (* helper function*)
+
+      (* helper function for transExp*)
       and checkRecType (a::a_tl, b::b_tl, pos) =
           let val a_ty = texp a
           in
