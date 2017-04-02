@@ -1,0 +1,21 @@
+ForExp(
+i,true,
+ IntExp(0),
+ IfExp(
+  IfExp(
+   IntExp(100),
+   IntExp(1),
+   IntExp(1)),
+  IntExp(0),
+  IntExp(0)),
+ SeqExp[
+  OpExp(MinusOp,
+   OpExp(PlusOp,
+    IntExp(1),
+    IntExp(2)),
+   OpExp(DivideOp,
+    OpExp(TimesOp,
+     IntExp(3),
+     IntExp(4)),
+    IntExp(5))),
+  SeqExp[]])
