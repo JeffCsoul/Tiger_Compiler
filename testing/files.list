@@ -9,7 +9,6 @@ queens.tig
 simpleType.tig
 simpleVar.tig
 strings.tig
-test1.tig
 test10.tig
 test11.tig
 test12.tig
@@ -20,7 +19,7 @@ test16.tig
 test17.tig
 test18.tig
 test19.tig
-test2.tig
+test1.tig
 test20.tig
 test21.tig
 test22.tig
@@ -31,7 +30,7 @@ test26.tig
 test27.tig
 test28.tig
 test29.tig
-test3.tig
+test2.tig
 test30.tig
 test31.tig
 test32.tig
@@ -42,7 +41,7 @@ test36.tig
 test37.tig
 test38.tig
 test39.tig
-test4.tig
+test3.tig
 test40.tig
 test41.tig
 test42.tig
@@ -53,6 +52,7 @@ test46.tig
 test47.tig
 test48.tig
 test49.tig
+test4.tig
 test5.tig
 test6.tig
 test7.tig
