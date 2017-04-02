@@ -1,7 +1,7 @@
 (*
 These lines are just place holders for automated testing
 *)
-val dir_inname = "../Homework2/testcases/syntax-and-sem-analysis/"
+val dir_inname = "../testcases/syntax-and-sem-analysis/"
 val dir_outname = "/home/zhou0745/Github_repo/Tiger_Compiler_CSCI5161/testing/outputs/"
 
 structure Parse : sig val parse : string -> Absyn.exp 

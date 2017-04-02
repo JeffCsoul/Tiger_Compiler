@@ -1,5 +1,5 @@
 CODE_DIR='..'
-TESTCASE_DIR='../Homework2/testcases/syntax-and-sem-analysis'
+TESTCASE_DIR='../testcases/syntax-and-sem-analysis'
 CURR_DIR=`pwd`
 #
 # Clean up the code directory
