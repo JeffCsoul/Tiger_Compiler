@@ -372,8 +372,10 @@ and transDec (venv, tenv, A.VarDec{name, typ, init, ...}) =
           end
         )
     end
-  (*| transDec (venv, tenv, A.TypeDec tdec) =
-  | transDec (venv, tenv,
+  | transDec (venv, tenv, A.TypeDec tdec) =
+    {venv = venv, tenv = tenv}
+    (* TBD *)
+  (*| transDec (venv, tenv,
               A.FunctionDec({name,
                              params,
                              body,
@@ -382,15 +384,30 @@ and transDec (venv, tenv, A.VarDec{name, typ, init, ...}) =
                              :: f_tl)
              ) =
     let
+      fun find_param_type {name, escape, typ, pos} =
+        case Symbol.look(tenv, typ) of
+          SOME t => {name = name, typ = t}
+        | NONE =>
+          (
+            error pos ("Unbound type: " ^ name);
+            {name = name, typ = E.ERROR}
+          )
+    in
+    let
       val res_ty = case Symbol.look(tenv, r_t) of
                      SOME res => res
-                   | NONE => Types.ERROR
-      val {venv = venv', tenv = tenv'} = transDec(venv,
-                                                  tenv,
-                                                  A.FunctionDec(f_tl)
-                                                 )
+                   | NONE => E.UNIT
+      val params_ty = map find_param_type params
+      val venv_f = Symbol.enter(venv,
+                                name,
+                                E.FunEntry{
+                                formals = map #typ params_ty,
+                                result = res_ty
+                                })
+      (* no idea to how to rec-define function*)
     in
-      {venv = venv', tenv = tenv'}
+      transDec(venv_f, tenv, A.FunctionDec(f_tl))
+    end
     end*)
   (*| transDec (venv, tenv,
               A.FunctionDec(nil)) =*)
