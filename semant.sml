@@ -33,6 +33,16 @@ fun lookup_env tenv n pos =
   )
   end
 
+(* NAME helper function*)
+exception NullPointExeception
+fun find_induc_type (E.NAME (s, tyref)) =
+    (
+      case !tyref of
+        NONE => raise NullPointExeception
+      | SOME t => find_induc_type t
+    )
+  | find_induc_type t = t
+
 fun transExp venv tenv e =
   let fun texp (A.VarExp (v)) = tvar v
 
@@ -41,7 +51,7 @@ fun transExp venv tenv e =
         | texp (A.IntExp (i)) = E.INT
 
         | texp (A.StringExp (s, pos)) = E.STRING
-
+        (* CallExp: result*)
         | texp (A.CallExp {func, args, pos}) =
           let
             val res = Symbol.look (venv, func)
@@ -49,17 +59,14 @@ fun transExp venv tenv e =
             case res of
               SOME (E.FunEntry {formals, result}) =>
               (
-                if (length args = length formals)
-                then
-                  (
-                    checkRecType(args, formals, pos);
-                    result
-                  )
-                else
-                  (
-                    error pos ("Error args number: " ^ Symbol.name func);
-                    result
-                  )
+                (
+                  if (length args = length formals)
+                  then
+                      checkRecType(args, formals, pos)
+                  else
+                      error pos ("Error args number: " ^ Symbol.name func)
+                );
+                result
               )
             | _ =>
               (
@@ -67,8 +74,48 @@ fun transExp venv tenv e =
                 E.UNIT
               )
           end
-
-        | texp (A.OpExp {left, oper, right, pos}) = E.NIL
+        (* OpExp: INT*)
+        | texp (A.OpExp {left, oper, right, pos}) =
+        (
+          (* INT oper*)
+          if (oper = A.PlusOp orelse
+              oper = A.MinusOp orelse
+              oper = A.TimesOp orelse
+              oper = A.DivideOp)
+            then
+            (
+              checkInt(left, pos);
+              checkInt(right, pos);
+              E.INT
+            )
+            (* BOOL oper*)
+            else
+            (
+              let
+                val leftty = texp left
+              in
+              (
+                (if leftty = E.INT
+                  then
+                    (
+                      checkInt(left, pos);
+                      checkInt(right, pos)
+                    )
+                  else
+                    if leftty = E.STRING
+                      then
+                      (
+                        checkString(left, pos);
+                        checkString(right, pos)
+                      )
+                      else
+                        error pos "Type not match on comparison"
+                )
+              )
+              end;
+              E.INT
+            )
+        )
 
         | texp (A.RecordExp {fields, typ, pos}) = E.NIL
 
@@ -109,6 +156,30 @@ fun transExp venv tenv e =
           end
         | checkRecType (nil, _, pos) = ( )
         | checkRecType (_, nil, pos) = ( )
+      and checkInt(i, pos) =
+          let val n = texp i
+          in
+            if (n = E.INT)
+              then
+                ()
+              else
+              (
+                error pos "Error: expected INT here";
+                ()
+              )
+          end
+      and checkString(s, pos) =
+          let val n = texp s
+          in
+            if (n = E.STRING)
+              then
+                ()
+              else
+              (
+                error pos "Error: expected STRING here";
+                ()
+              )
+          end
   in
     texp e
   end
