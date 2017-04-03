@@ -268,7 +268,7 @@ fun transExp venv tenv e =
       and checkRecType (a::a_tl, b::b_tl, pos) =
           let val a_ty = texp a
           in
-            if (a_ty = b)
+            if (find_induc_type a_ty = find_induc_type b)
               then
                 checkRecType (a_tl, b_tl, pos)
               else
@@ -336,7 +336,7 @@ and transDec (venv, tenv, A.VarDec{name, typ, init, ...}) =
         {venv = Symbol.enter(venv,
                              name,
                              E.VarEntry{ty = init_ty, loopvar = false}),
-         tenv = tenv                             
+         tenv = tenv
         }
       | SOME(id, pos) =>
         (
@@ -372,7 +372,29 @@ and transDec (venv, tenv, A.VarDec{name, typ, init, ...}) =
           end
         )
     end
-  | transDec (venv, tenv, _) => {venv = venv, tenv = tenv}
+  (*| transDec (venv, tenv, A.TypeDec tdec) =
+  | transDec (venv, tenv,
+              A.FunctionDec({name,
+                             params,
+                             body,
+                             pos,
+                             result=SOME(r_t,r_pos)}
+                             :: f_tl)
+             ) =
+    let
+      val res_ty = case Symbol.look(tenv, r_t) of
+                     SOME res => res
+                   | NONE => Types.ERROR
+      val {venv = venv', tenv = tenv'} = transDec(venv,
+                                                  tenv,
+                                                  A.FunctionDec(f_tl)
+                                                 )
+    in
+      {venv = venv', tenv = tenv'}
+    end*)
+  (*| transDec (venv, tenv,
+              A.FunctionDec(nil)) =*)
+  | transDec (venv, tenv, _) = {venv = venv, tenv = tenv}
 
 and transDecs (venv, tenv, decs) =
     (
