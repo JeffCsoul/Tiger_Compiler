@@ -150,8 +150,20 @@ fun transExp venv tenv e =
 
         | texp (A.SeqExp (explist)) = parseSeq explist
 
-        | texp (A.AssignExp {var, exp, pos}) = E.NIL
-
+        | texp (A.AssignExp {var, exp, pos}) =
+          (
+            let
+              val id_type = tvar var
+              val res_type = texp exp
+            in
+              if (id_type = res_type)
+                then
+                  ()
+                else
+                  error pos "Type not match in assignment"
+            end;
+            E.UNIT
+          )
         | texp (A.IfExp {test, then', else', pos}) = E.NIL
 
         | texp (A.WhileExp {test, body, pos}) = E.NIL
