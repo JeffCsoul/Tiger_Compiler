@@ -148,7 +148,7 @@ fun transExp venv tenv e =
               )
           end
 
-        | texp (A.SeqExp (explist)) = E.NIL
+        | texp (A.SeqExp (explist)) = parseSeq explist
 
         | texp (A.AssignExp {var, exp, pos}) = E.NIL
 
@@ -209,6 +209,14 @@ fun transExp venv tenv e =
                 ()
               )
           end
+      and parseSeq (s::nil) =
+          texp (#1 s)
+        | parseSeq (s::s_tl) =
+          (
+            texp (#1 s);
+            parseSeq s_tl
+          )
+        | parseSeq nil = E.UNIT
   in
     texp e
   end
