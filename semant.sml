@@ -19,6 +19,7 @@ type  exp = A.exp
 type  transty = E.ty
 val error = ErrorMsg.error
 
+(* return UNIT if type for the target not found *)
 fun lookup_env tenv n pos =
   let val res = Symbol.look (tenv, n)
   in
@@ -116,8 +117,36 @@ fun transExp venv tenv e =
               E.INT
             )
         )
-
-        | texp (A.RecordExp {fields, typ, pos}) = E.NIL
+        (* RecordExp: inductive type and depends env*)
+        | texp (A.RecordExp {fields, typ, pos}) =
+          let val typ_r = lookup_env tenv typ pos
+              val res = find_induc_type typ_r
+              val f_id_list = map #1 fields
+              val f_exp_res_list = map texp (map #2 fields)
+              val f_pos_list = map #3 fields
+          in
+            case res of
+              E.RECORD(d, u) =>
+              (
+                let
+                  val dec_id_list = map #1 d
+                  val dec_res_list = map find_induc_type (map #2 d)
+                in
+                  if f_id_list = dec_id_list andalso
+                     f_exp_res_list = dec_res_list
+                    then
+                      ()
+                    else
+                      error pos ("Field types not match: " ^ Symbol.name typ)
+                end;
+                E.RECORD(d, u)
+              )
+            | _ =>
+              (
+                error pos ("Invalid record: " ^ Symbol.name typ);
+                E.UNIT
+              )
+          end
 
         | texp (A.SeqExp (explist)) = E.NIL
 
