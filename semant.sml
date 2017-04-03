@@ -333,11 +333,11 @@ and transDec (venv, tenv, A.VarDec{name, typ, init, ...}) =
     in
       case typ of
         NONE =>
-        {tenv = tenv,
-         venv = Symbol.enter(venv,
+        {venv = Symbol.enter(venv,
                              name,
-                             E.VarEntry{ty = init_ty, loopvar = false}
-                            )}
+                             E.VarEntry{ty = init_ty, loopvar = false}),
+         tenv = tenv                             
+        }
       | SOME(id, pos) =>
         (
           let
@@ -347,11 +347,12 @@ and transDec (venv, tenv, A.VarDec{name, typ, init, ...}) =
               NONE =>
               (
                 error pos ("Unbound type: " ^ Symbol.name id);
-                {tenv = tenv,
-                 venv = Symbol.enter(venv,
+                {venv = Symbol.enter(venv,
                                      name,
                                      E.VarEntry{ty = init_ty, loopvar = false}
-                                    )}
+                                    ),
+                 tenv = tenv
+                }
                 (* follow the init value's type*)
               )
             | SOME res_ty =>
@@ -361,16 +362,17 @@ and transDec (venv, tenv, A.VarDec{name, typ, init, ...}) =
                 ()
                 else
                 error pos "type not match";
-                {tenv = tenv,
-                 venv = Symbol.enter(venv,
+                {venv = Symbol.enter(venv,
                                      name,
-                                     E.VarEntry{ty = res_ty, loopvar = false}
-                                    )}
+                                     E.VarEntry{ty = res_ty, loopvar = false}),
+                 tenv = tenv
+                }
                 (* follow the specified type *)
               )
           end
         )
     end
+  | transDec (venv, tenv, _) => {venv = venv, tenv = tenv}
 
 and transDecs (venv, tenv, decs) =
     (
