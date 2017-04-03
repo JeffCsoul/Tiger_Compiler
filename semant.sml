@@ -30,7 +30,7 @@ fun lookup_env tenv n pos =
     | NONE =>
       (
         error pos ("Not in scope: " ^ Symbol.name n);
-        E.UNIT
+        E.ERROR
       )
   )
   end
@@ -222,7 +222,31 @@ fun transExp venv tenv e =
             end
           )
 
-        | texp (A.ArrayExp {typ, size, init, pos}) = E.UNIT
+        | texp (A.ArrayExp {typ, size, init, pos}) =
+          (
+            let
+              val res = find_induc_type (lookup_env tenv typ pos)
+              val init_res = texp init
+            in
+              (
+                if (res = E.ERROR)
+                then
+                  E.ERROR
+                else
+                  if (res = init_res)
+                  then
+                    (
+                      checkInt(size, pos);
+                      E.ARRAY(res, ref ())
+                    )
+                  else
+                    (
+                      error pos ("initial error on array: " ^ Symbol.name typ);
+                      E.ARRAY(res, ref ())
+                    )
+              )
+            end
+          )
 
       and tvar (A.SimpleVar(id, pos)) =
           (
