@@ -18,6 +18,7 @@ struct
 type  exp = A.exp
 type  transty = E.ty
 val error = ErrorMsg.error
+val loop_level = ref 0
 
 (* return UNIT if type for the target not found *)
 fun lookup_env tenv n pos =
@@ -185,8 +186,10 @@ fun transExp venv tenv e =
 
         | texp (A.WhileExp {test, body, pos}) =
           (
+            loop_level := !loop_level + 1;
             checkInt(test, pos);
             checkUnit(body, pos);
+            loop_level := !loop_level - 1;
             E.UNIT
           )
 
