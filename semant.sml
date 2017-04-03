@@ -145,7 +145,7 @@ fun transExp venv tenv e =
             | _ =>
               (
                 error pos ("Invalid record: " ^ Symbol.name typ);
-                E.UNIT
+                E.ERROR
               )
           end
 
@@ -193,15 +193,48 @@ fun transExp venv tenv e =
             E.UNIT
           )
 
-        | texp (A.ForExp {var, escape, lo, hi, body, pos}) = E.NIL
+        | texp (A.ForExp {var, escape, lo, hi, body, pos}) =
+          (
+            loop_level := !loop_level + 1;
+            checkInt(lo, pos);
+            checkInt(hi, pos);
+            checkUnit(body, pos);
+            loop_level := !loop_level - 1;
+            E.UNIT
+          )
+        | texp (A.BreakExp (pos)) =
+          (
+            (
+              if (!loop_level > 0)
+                then
+                  ()
+                else
+                  error pos "Break cannot be placed out of loop"
+            );
+            E.UNIT
+          )
 
-        | texp (A.BreakExp (pos)) = E.NIL
+        | texp (A.LetExp {decs, body, pos}) =
+          (
+            let val {venv=venv', tenv=tenv'} = transDecs(venv, tenv, decs)
+            in
+              transExp venv' tenv' body
+            end
+          )
 
-        | texp (A.LetExp {decs, body, pos}) = E.NIL
+        | texp (A.ArrayExp {typ, size, init, pos}) = E.UNIT
 
-        | texp (A.ArrayExp {typ, size, init, pos}) = E.NIL
-
-      and tvar (A.SimpleVar(id, pos)) = E.NIL
+      and tvar (A.SimpleVar(id, pos)) =
+          (
+            case Symbol.look(venv, id) of
+              SOME (E.VarEntry{ty, loopvar}) =>
+                find_induc_type ty
+            | _ =>
+              (
+                error pos ("Unbound variable: " ^ Symbol.name id);
+                E.ERROR
+              )
+          )
 
         | tvar (A.FieldVar (v, id, pos)) = E.NIL
 
@@ -270,6 +303,20 @@ fun transExp venv tenv e =
     texp e
   end
 
+and transDec (venv, tenv, t) =
+  {venv = venv, tenv = tenv}
+
+and transDecs (venv, tenv, decs) =
+    (
+      case decs of
+        nil => {venv=venv, tenv=tenv}
+      | (d::d_tl) =>
+        let
+          val {venv=venv', tenv=tenv'} = transDec(venv, tenv, d)
+        in
+          transDecs(venv', tenv', d_tl)
+        end
+    )
 fun transProg e =
   transExp E.base_venv E.base_tenv e
 (* need to provided a definition of transProg that takes an abstract
