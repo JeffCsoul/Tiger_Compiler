@@ -251,7 +251,7 @@ fun transExp venv tenv e =
       and tvar (A.SimpleVar(id, pos)) =
           (
             case Symbol.look(venv, id) of
-              SOME (E.VarEntry{ty, loopvar}) =>
+              SOME (E.VarEntry{ty, ... }) =>
                 find_induc_type ty
             | _ =>
               (
@@ -327,8 +327,50 @@ fun transExp venv tenv e =
     texp e
   end
 
-and transDec (venv, tenv, t) =
-  {venv = venv, tenv = tenv}
+and transDec (venv, tenv, A.VarDec{name, typ, init, ...}) =
+    let
+      val init_ty = transExp venv tenv init
+    in
+      case typ of
+        NONE =>
+        {tenv = tenv,
+         venv = Symbol.enter(venv,
+                             name,
+                             E.VarEntry{ty = init_ty, loopvar = false}
+                            )}
+      | SOME(id, pos) =>
+        (
+          let
+            val res = Symbol.look (tenv, id)
+          in
+            case res of
+              NONE =>
+              (
+                error pos ("Unbound type: " ^ Symbol.name id);
+                {tenv = tenv,
+                 venv = Symbol.enter(venv,
+                                     name,
+                                     E.VarEntry{ty = init_ty, loopvar = false}
+                                    )}
+                (* follow the init value's type*)
+              )
+            | SOME res_ty =>
+              (
+                if res_ty = init_ty
+                then
+                ()
+                else
+                error pos "type not match";
+                {tenv = tenv,
+                 venv = Symbol.enter(venv,
+                                     name,
+                                     E.VarEntry{ty = res_ty, loopvar = false}
+                                    )}
+                (* follow the specified type *)
+              )
+          end
+        )
+    end
 
 and transDecs (venv, tenv, decs) =
     (
