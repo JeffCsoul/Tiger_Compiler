@@ -183,7 +183,12 @@ fun transExp venv tenv e =
             E.UNIT
           )
 
-        | texp (A.WhileExp {test, body, pos}) = E.NIL
+        | texp (A.WhileExp {test, body, pos}) =
+          (
+            checkInt(test, pos);
+            checkUnit(body, pos);
+            E.UNIT
+          )
 
         | texp (A.ForExp {var, escape, lo, hi, body, pos}) = E.NIL
 
