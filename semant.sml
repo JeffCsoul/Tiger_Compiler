@@ -110,7 +110,7 @@ fun transExp venv tenv e =
                         checkString(right, pos)
                       )
                       else
-                        error pos "Type not match on comparison"
+                        error pos "Types cannot be compared"
                 )
               )
               end;
@@ -164,7 +164,24 @@ fun transExp venv tenv e =
             end;
             E.UNIT
           )
-        | texp (A.IfExp {test, then', else', pos}) = E.NIL
+        | texp (A.IfExp {test, then', else', pos}) =
+          (
+            (
+              case else' of
+                NONE =>
+                (
+                  checkInt(test, pos);
+                  checkUnit(then', pos)
+                )
+              | SOME s_else =>
+                (
+                  checkInt(test, pos);
+                  checkUnit(then', pos);
+                  checkUnit(s_else, pos)
+                )
+            );
+            E.UNIT
+          )
 
         | texp (A.WhileExp {test, body, pos}) = E.NIL
 
@@ -218,6 +235,18 @@ fun transExp venv tenv e =
               else
               (
                 error pos "Error: expected STRING here";
+                ()
+              )
+          end
+      and checkUnit(u, pos) =
+          let val n = texp u
+          in
+            if (n = E.UNIT)
+              then
+                ()
+              else
+              (
+                error pos "Error: expected UNIT here";
                 ()
               )
           end
